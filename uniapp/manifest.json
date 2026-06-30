@@ -1,6 +1,6 @@
 {
     "name" : "LikeShop",
-    "appid" : "__UNI__17FB384",
+    "appid" : "__UNI__31E6090",
     "description" : "",
     "versionName" : "3.0.3",
     "versionCode" : 100,
@@ -156,7 +156,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx75faf8824586138a",
+        "appid" : "wx48fa13a3cc0dcf72",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,

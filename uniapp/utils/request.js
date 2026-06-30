@@ -35,7 +35,12 @@ service.interceptors.request.use(
     if (config.method == "GET") {
       config.url += paramsToStr(config.params);
     }
-    config.header.token = config.header.token || Cache.get(TOKEN);
+    const token = config.header.token || Cache.get(TOKEN);
+    if (token) {
+      config.header.token = token;
+    } else {
+      delete config.header.token;
+    }
     return config;
   },
   (error) => {

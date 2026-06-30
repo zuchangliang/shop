@@ -5,6 +5,7 @@ namespace app\common\command;
 use app\common\model\Order;
 use app\common\model\Pay;
 use app\common\model\RechargeOrder;
+use app\common\model\Client_;
 use app\common\server\WechatMiniExpressSendSyncServer;
 use think\console\Command;
 use think\console\Input;
@@ -32,6 +33,8 @@ class WechatMiniExpressSendSync extends Command
             ->where('shipping_status', 1)
             ->where('pay_status', 1)
             ->where('pay_way', Pay::WECHAT_PAY)
+            ->where('order_source', Client_::mnp)
+            ->where('transaction_id', '<>', '')
             ->where('wechat_mini_express_sync', 0)
             ->where('order_status', 'in', [ Order::STATUS_WAIT_RECEIVE, Order::STATUS_FINISH ])
             ->limit(60)
@@ -41,6 +44,8 @@ class WechatMiniExpressSendSync extends Command
         $list2 = Order::where('delivery_type', Order::DELIVERY_STATUS_SELF)
             ->where('pay_status', 1)
             ->where('pay_way', Pay::WECHAT_PAY)
+            ->where('order_source', Client_::mnp)
+            ->where('transaction_id', '<>', '')
             ->where('wechat_mini_express_sync', 0)
             ->where('order_status', 'in', [ Order::STATUS_WAIT_DELIVERY, Order::STATUS_WAIT_RECEIVE, Order::STATUS_FINISH ])
             ->limit(20)
@@ -59,6 +64,8 @@ class WechatMiniExpressSendSync extends Command
     {
         $list = RechargeOrder::where('pay_status', 1)
             ->where('pay_way', Pay::WECHAT_PAY)
+            ->where('order_source', Client_::mnp)
+            ->where('transaction_id', '<>', '')
             ->where('wechat_mini_express_sync', 0)
             ->limit(60)
             ->order('id desc')

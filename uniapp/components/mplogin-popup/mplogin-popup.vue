@@ -38,10 +38,12 @@
                         <u-form-item required label="昵称" :labelWidth="120">
                             <input
                                 style="height: 60rpx"
-                                :value="userInfo.nickname"
+                                :value="nickname"
                                 name="nickname"
                                 type="nickname"
                                 placeholder="请输入昵称"
+                                @input="onNicknameInput"
+                                @blur="onNicknameBlur"
                             />
                         </u-form-item>
                         <button
@@ -79,6 +81,7 @@ export default {
     data() {
         return {
             avatar: "",
+            nickname: "",
         };
     },
     methods: {
@@ -103,20 +106,26 @@ export default {
                     });
                 });
         },
-		handleSubmit(e) {
-			const { nickname } = e.detail.value
-			const {avatar} = this
-			if(!avatar) return  this.$toast({
-				title: '请添加头像'
-			})
-			if(!nickname) return  this.$toast({
-				title: '请输入昵称'
-			})
-			this.$emit('update', {
-				avatar,
-				nickname
-			})
-		},
+        onNicknameInput(e) {
+            this.nickname = e.detail.value;
+        },
+        onNicknameBlur(e) {
+            this.nickname = e.detail.value;
+        },
+        handleSubmit(e) {
+            const nickname = this.nickname || e.detail.value.nickname
+            const { avatar } = this
+            if (!avatar) return this.$toast({
+                title: '请添加头像'
+            })
+            if (!nickname) return this.$toast({
+                title: '请输入昵称'
+            })
+            this.$emit('update', {
+                avatar,
+                nickname
+            })
+        },
 		onClose() {
 			this.showPop = false
 			this.$emit('close')

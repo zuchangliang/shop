@@ -31,6 +31,7 @@ use app\common\model\SelffetchShop;
 use app\common\model\UserLevel;
 use app\common\server\ConfigServer;
 use app\common\server\UrlServer;
+use app\common\server\WechatMiniExpressSendSyncServer;
 use app\common\server\YlyPrinter;
 use expressage\Kd100;
 use expressage\Kdniao;
@@ -479,6 +480,8 @@ class OrderLogic
             'invoice_no'    => $data['invoice_no'] ?? '',
             'time' => date('Y-m-d H:i:s')
         ]);
+
+        WechatMiniExpressSendSyncServer::_sync_order($order->toArray());
     }
 
 

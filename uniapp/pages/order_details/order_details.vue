@@ -545,6 +545,7 @@ export default {
       getOrderDetail(this.id)
         .then((res) => {
           if (res.code == 1) {
+            this.id = res.data.id || this.id;
             this.cancelTime = res.data.order_cancel_time - Date.now() / 1000;
             this.orderDetail = res.data;
             this.team = res.data.team || {};
@@ -621,7 +622,7 @@ export default {
   top: 0;
   width: 100%;
   height: 200rpx;
-  background-color: $-color-primary;
+  background-color: $color-primary;
   z-index: 0;
 }
 
@@ -691,7 +692,7 @@ export default {
 }
 
 .footer .plain.red {
-  border: 1px solid $-color-primary;
+  border: 1px solid $color-primary;
 }
 
 .tips-dialog {
@@ -783,6 +784,6 @@ export default {
 }
 
 .receive-info-item:nth-child(n + 2) {
-  border-top: $-dashed-border;
+  border-top: $dashed-border;
 }
 </style>

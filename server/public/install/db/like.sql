@@ -1057,6 +1057,7 @@ CREATE TABLE `ls_freight`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模板名称',
   `charge_way` tinyint(1) NULL DEFAULT 0 COMMENT '计费方式:1-重量计费;2-体积计费;3-件数计费',
   `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
+  `undeliverable_region` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '不配送地区id',
   `create_time` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '添加时间',
   `update_time` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE

@@ -14,9 +14,9 @@ const IS_H5 = false
 /** S API BaseURL **/
 const baseURLMap = {
     // 开发环境
-    development: 'https://likeshop-open.yixiangonline.com',
-    // 生产环境https://php-b2c.likeshop.cn
-    production: IS_H5 ? location.origin : ''
+    development: 'https://shop.deepmega.cn',
+    // 生产环境
+    production: IS_H5 ? location.origin : 'https://shop.deepmega.cn'
 }
 
 const baseURL = SWITCH_DEVELOPMENT ? baseURLMap['development'] : baseURLMap[process.env.NODE_ENV]

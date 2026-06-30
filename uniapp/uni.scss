@@ -17,26 +17,26 @@
 
 /* 行为相关颜色 */
 //主题色
-$-color-primary: #FF2C3C;
+$color-primary: #FF2C3C;
 //主要边框颜色
-$-color-border: #E5E5E5;
+$color-border: #E5E5E5;
 //黑色
-$-color-black:#101010;
+$color-black:#101010;
 //白色
-$-color-white: #ffffff;
+$color-white: #ffffff;
 //字体主色
-$-color-normal: #333333;
+$color-normal: #333333;
 //字体浅色
-$-color-lighter: #666666;
+$color-lighter: #666666;
 //字体更浅色
-$-color-muted: #999999;
+$color-muted: #999999;
 
 //背景色
-$-color-body: #F6F6F6;
+$color-body: #F6F6F6;
 
 //边框
-$-solid-border: 1px solid $-color-border;
-$-dashed-border: 1px dashed $-color-border;
+$solid-border: 1px solid $color-border;
+$dashed-border: 1px dashed $color-border;
 
 
 

@@ -21,6 +21,7 @@ namespace app\api\logic;
 
 use app\common\model\Freight;
 use think\Db;
+use think\Exception;
 
 /**
  * 运费逻辑
@@ -45,6 +46,8 @@ class FreightLogic
         if (empty($user_address)){
             return $shipping_price;
         }
+
+        self::checkDeliverable($goods, $user_address);
 
         foreach ($goods as $good){
             //统一邮费
@@ -125,37 +128,137 @@ class FreightLogic
      */
     public static function getFreightsByAddress($template_id, $address)
     {
-        $district_id = $address['district_id'];
-        $city_id = $address['city_id'];
-        $province_id = $address['province_id'];
-
         $freights = Db::name('freight')->alias('f')
             ->join('freight_config c', 'c.freight_id = f.id')
             ->where('f.id', $template_id)
             ->order(['f.id' => 'desc', 'c.id' => 'desc'])
             ->select();
 
+        return self::matchFreightConfigByAddress($freights, $address);
+    }
+
+    /**
+     * Desc: 验证指定运费模板商品是否支持配送到收货地址
+     * @param $goods
+     * @param $user_address
+     * @throws Exception
+     */
+    public static function checkDeliverable($goods, $user_address)
+    {
+        if (empty($goods) || empty($user_address)) {
+            return true;
+        }
+
+        $template_ids = [];
+        foreach ($goods as $good) {
+            if (
+                isset($good['free_shipping_type'], $good['free_shipping_template_id']) &&
+                $good['free_shipping_type'] == 3 &&
+                $good['free_shipping_template_id'] > 0
+            ) {
+                $template_ids[] = $good['free_shipping_template_id'];
+            }
+        }
+
+        $template_ids = array_unique($template_ids);
+        if (empty($template_ids)) {
+            return true;
+        }
+
+        $templates = Db::name('freight')
+            ->field('id,name,undeliverable_region')
+            ->where('id', 'in', $template_ids)
+            ->select();
+
+        $template = self::matchUndeliverableTemplateByAddress($templates, $user_address);
+        if (!empty($template)) {
+            throw new Exception('该收货地区暂不支持配送');
+        }
+
+        return true;
+    }
+
+    /**
+     * Desc: 地址是否命中地区列表
+     * @param $region
+     * @param $address
+     * @return bool
+     */
+    public static function isAddressInRegion($region, $address)
+    {
+        if (empty($region) || empty($address)) {
+            return false;
+        }
+
+        $region = trim((string)$region);
+        if ($region === '') {
+            return false;
+        }
+
+        if ($region === 'all') {
+            return true;
+        }
+
+        $region_ids = array_map('trim', explode(',', $region));
+        $region_ids = array_filter($region_ids, function ($id) {
+            return $id !== '';
+        });
+
+        $address_ids = [
+            isset($address['district_id']) ? (string)$address['district_id'] : '',
+            isset($address['city_id']) ? (string)$address['city_id'] : '',
+            isset($address['province_id']) ? (string)$address['province_id'] : '',
+        ];
+
+        foreach ($address_ids as $id) {
+            if ($id !== '' && in_array($id, $region_ids, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Desc: 从运费配置列表中匹配地址对应配置
+     * @param $freights
+     * @param $address
+     * @return array|mixed
+     */
+    public static function matchFreightConfigByAddress($freights, $address)
+    {
+        $national_freight = [];
+
         foreach ($freights as $freight) {
-            $region_ids = explode(',', $freight['region']);
-            if (in_array($district_id, $region_ids)) {
-                return $freight;
-            }
-
-            if (in_array($city_id, $region_ids)) {
-                return $freight;
-            }
-
-            if (in_array($province_id, $region_ids)) {
-                return $freight;
-            }
-
-            if ($freight['region'] = 'all'){
+            if (($freight['region'] ?? '') === 'all') {
                 $national_freight = $freight;
+                continue;
+            }
+
+            if (self::isAddressInRegion($freight['region'] ?? '', $address)) {
+                return $freight;
             }
         }
 
         //会员的省市区id在商家的运费模板(指定地区)中找不到,查一下商家的全国运费模板
         return $national_freight;
+    }
+
+    /**
+     * Desc: 从运费模板列表中匹配禁配模板
+     * @param $templates
+     * @param $address
+     * @return array|mixed
+     */
+    public static function matchUndeliverableTemplateByAddress($templates, $address)
+    {
+        foreach ($templates as $template) {
+            if (self::isAddressInRegion($template['undeliverable_region'] ?? '', $address)) {
+                return $template;
+            }
+        }
+
+        return [];
     }
 
     /**

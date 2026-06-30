@@ -42,7 +42,9 @@ export function getUserProfile() {
 			success: (res) => {
 				resolve(res);
 			},
-			fail(res) {}
+			fail(res) {
+				reject(res);
+			}
 
 		})
 	})

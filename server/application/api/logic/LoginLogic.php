@@ -658,19 +658,14 @@ class LoginLogic extends LogicBase
             $response = self::getWechatResByCode($post);
             $response['headimgurl'] = $post['headimgurl'] ?? '';
             $response['nickname'] = $post['nickname'] ?? '';
-            //通过获取到的openID或unionid获取当前 系统 用户id
-            $user_id = self::getUserByWechatResponse($response);
+            $user_info = self::getMnpUserInfo($response);
 
         } catch (Exception $e) {
             return self::dataError('登录失败:' . $e->getMessage());
         } catch (\think\Exception $e) {
             return self::dataError('登录失败:' . $e->getMessage());
-        }
-
-        if (empty($user_id)) {
-            $user_info = UserServer::createUser($response, Client_::mnp);
-        } else {
-            $user_info = UserServer::updateUser($response, Client_::mnp, $user_id);
+        } catch (\Exception $e) {
+            return self::dataError('登录失败:' . $e->getMessage());
         }
 
         //验证用户信息
@@ -684,6 +679,38 @@ class LoginLogic extends LogicBase
 
         unset($user_info['id'], $user_info['disable']);
         return self::dataSuccess('登录成功', $user_info);
+    }
+
+    private static function getMnpUserInfo($response)
+    {
+        // 并发授权登录时，多个 authLogin 可能同时判断用户不存在。
+        $user_id = self::getUserByWechatResponse($response);
+        if (empty($user_id)) {
+            try {
+                return UserServer::createUser($response, Client_::mnp);
+            } catch (\Exception $e) {
+                if (!self::isDuplicateWechatOpenidException($e)) {
+                    throw $e;
+                }
+                $user_id = self::getUserByWechatResponse($response);
+                if (empty($user_id)) {
+                    throw $e;
+                }
+            }
+        }
+
+        return UserServer::updateUser($response, Client_::mnp, $user_id);
+    }
+
+    private static function isDuplicateWechatOpenidException(\Exception $e)
+    {
+        $message = $e->getMessage();
+        return false !== strpos($message, 'Duplicate entry')
+            && (
+                false !== strpos($message, "key 'openid'")
+                || false !== strpos($message, 'key `openid`')
+                || false !== strpos($message, 'for key openid')
+            );
     }
 
     /**

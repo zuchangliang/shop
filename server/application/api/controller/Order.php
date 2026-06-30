@@ -75,11 +75,50 @@ class Order extends ApiBase
         if (!$order_id){
             $this->_error('请选择订单');
         }
+        $order_id = $this->resolveOrderDetailId($order_id);
         $order_detail = OrderLogic::getOrderDetail($order_id, $this->user_id);
         if (!$order_detail) {
             $this->_error('订单不存在了!', '');
         }
         $this->_success('获取成功', $order_detail);
+    }
+
+    /**
+     * Notes: 兼容微信订单管理 Path 中传入的 out_trade_no
+     * @param $order_id
+     * @return mixed
+     */
+    private function resolveOrderDetailId($order_id)
+    {
+        $order_id = trim((string)$order_id);
+        if ($order_id === '') {
+            return $order_id;
+        }
+
+        if (ctype_digit($order_id)) {
+            $id = Db::name('order')->where([
+                'id' => $order_id,
+                'user_id' => $this->user_id,
+                'del' => 0,
+            ])->value('id');
+            if ($id) {
+                return $id;
+            }
+        }
+
+        $order_sn = substr($order_id, 0, 18);
+        if (strlen($order_sn) === 18 && ctype_digit($order_sn)) {
+            $id = Db::name('order')->where([
+                'order_sn' => $order_sn,
+                'user_id' => $this->user_id,
+                'del' => 0,
+            ])->value('id');
+            if ($id) {
+                return $id;
+            }
+        }
+
+        return $order_id;
     }
     
     /**

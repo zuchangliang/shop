@@ -23,9 +23,10 @@ use app\admin\logic\DistributionLevelLogic;
 use app\api\logic\GoodsLogic;
 use app\api\logic\OrderLogic;
 use app\api\logic\TeamLogic;
-use app\common\model\{AccountLog, Footprint, MessageScene_, NoticeSetting, OrderLog, User, Pay, Order, OrderTrade};
+use app\common\model\{AccountLog, Client_, Footprint, MessageScene_, NoticeSetting, OrderLog, User, Pay, Order, OrderTrade, RechargeOrder};
 use app\common\server\ConfigServer;
 use app\common\server\DistributionServer;
+use app\common\server\WechatMiniExpressSendSyncServer;
 use think\Db;
 use think\Exception;
 use think\facade\Hook;
@@ -44,6 +45,7 @@ class PayNotifyLogic
         try {
             self::$action($order_sn, $extra);
             Db::commit();
+            self::syncWechatMiniExpress($action, $order_sn);
             return true;
         } catch (Exception $e) {
             Db::rollback();
@@ -52,6 +54,39 @@ class PayNotifyLogic
             ];
             Log::record(implode('-', $record));
             return $e->getMessage();
+        }
+    }
+
+    private static function syncWechatMiniExpress($action, $order_sn)
+    {
+        try {
+            if ($action == 'order') {
+                $order = Order::where('order_sn', $order_sn)->find();
+                if (!$order ||
+                    $order['order_source'] != Client_::mnp ||
+                    $order['pay_way'] != Pay::WECHAT_PAY ||
+                    $order['delivery_type'] != Order::DELIVERY_STATUS_SELF
+                ) {
+                    return;
+                }
+
+                WechatMiniExpressSendSyncServer::_sync_order($order->toArray());
+                return;
+            }
+
+            if ($action == 'recharge') {
+                $recharge = RechargeOrder::where('order_sn', $order_sn)->find();
+                if (!$recharge ||
+                    $recharge['order_source'] != Client_::mnp ||
+                    $recharge['pay_way'] != Pay::WECHAT_PAY
+                ) {
+                    return;
+                }
+
+                WechatMiniExpressSendSyncServer::_sync_recharge($recharge->toArray());
+            }
+        } catch (\Throwable $e) {
+            Log::write($e->__toString(), 'wechat_mini_express_sync_after_pay');
         }
     }
 

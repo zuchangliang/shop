@@ -24,6 +24,7 @@ namespace app\common\server;
 use app\common\logic\PaymentLogic;
 use app\common\logic\PayNotifyLogic;
 use app\common\model\Client_;
+use app\common\model\OrderGoods;
 use app\common\model\Pay;
 use EasyWeChat\Factory;
 use EasyWeChat\Payment\Application;
@@ -182,7 +183,7 @@ class WeChatPayServer
             case 'order':
                 $attributes = [
                     'trade_type' => 'JSAPI',
-                    'body' => '商品',
+                    'body' => self::getOrderPaymentBody($order),
 //                    'out_trade_no' => $order['order_sn'],
                     'total_fee' => $order['order_amount'] * 100, // 单位：分
                     'notify_url' => $notify_url,
@@ -193,7 +194,7 @@ class WeChatPayServer
             case 'recharge':
                 $attributes = [
                     'trade_type' => 'JSAPI',
-                    'body' => '充值',
+                    'body' => self::getRechargePaymentBody($order),
 //                    'out_trade_no' => $order['order_sn'],
                     'total_fee' => $order['order_amount'] * 100, // 单位：分
                     'notify_url' => $notify_url,
@@ -229,6 +230,86 @@ class WeChatPayServer
         $attributes['out_trade_no'] = $order['order_sn'].$attributes['trade_type'].$order_source;
 
         return $attributes;
+    }
+
+    /**
+     * Notes: 微信支付商品描述
+     * @param $order
+     * @return string
+     */
+    private static function getOrderPaymentBody($order)
+    {
+        $goods = OrderGoods::where('order_id', $order['id'])
+            ->field('goods_name,goods_num')
+            ->select()
+            ->toArray();
+
+        $goods_desc = [];
+        foreach ($goods as $item) {
+            $goods_name = trim((string)($item['goods_name'] ?? ''));
+            if ($goods_name === '') {
+                continue;
+            }
+
+            $goods_num = (int)($item['goods_num'] ?? 0);
+            $goods_desc[] = $goods_num > 1 ? $goods_name . ' x' . $goods_num : $goods_name;
+        }
+
+        return self::formatPaymentBody(implode('、', $goods_desc), '商品订单');
+    }
+
+    /**
+     * Notes: 微信支付充值描述
+     * @param $order
+     * @return string
+     */
+    private static function getRechargePaymentBody($order)
+    {
+        return self::formatPaymentBody('账户余额充值', '账户余额充值');
+    }
+
+    /**
+     * Notes: 微信支付 description/body 长度限制处理
+     * @param string $body
+     * @param string $default
+     * @return string
+     */
+    private static function formatPaymentBody($body, $default)
+    {
+        $body = preg_replace('/\s+/u', ' ', trim((string)$body));
+        if ($body === '') {
+            $body = $default;
+        }
+
+        return self::limitUtf8ByBytes($body, 127);
+    }
+
+    /**
+     * Notes: 按字节安全截断 UTF-8 字符串，兼容微信支付 body/description 限制
+     * @param string $value
+     * @param int $limit
+     * @return string
+     */
+    private static function limitUtf8ByBytes($value, $limit)
+    {
+        if (strlen($value) <= $limit) {
+            return $value;
+        }
+
+        $suffix = '...';
+        $limit = $limit - strlen($suffix);
+        $result = '';
+        $length = mb_strlen($value, 'UTF-8');
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($value, $i, 1, 'UTF-8');
+            if (strlen($result . $char) > $limit) {
+                break;
+            }
+            $result .= $char;
+        }
+
+        return $result . $suffix;
     }
 
 

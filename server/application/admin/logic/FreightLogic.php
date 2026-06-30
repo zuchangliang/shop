@@ -66,6 +66,7 @@ class FreightLogic
         $freight->name = $post['name'];
         $freight->charge_way = $post['charge_way'];
         $freight->remark = $post['remark'];
+        $freight->undeliverable_region = $post['undeliverable_region'] ?? '';
         $freight->allowField(true)->save();
 
         $freight_config = new FreightConfig();
@@ -102,6 +103,7 @@ class FreightLogic
                 'name' => $post['name'],
                 'charge_way' => $post['charge_way'],
                 'remark' => $post['remark'],
+                'undeliverable_region' => $post['undeliverable_region'] ?? '',
             ], ['id' => $freight['id']]);
 
 
@@ -149,6 +151,7 @@ class FreightLogic
             ->find()->toArray();
 
         $regions = Db::name('dev_region')->column('name', 'id');
+        $freight['undeliverable_region_name'] = self::formatRegionNames($freight['undeliverable_region'] ?? '', $regions);
 
         foreach ($freight['configs'] as &$item) {
             $item['region_name'] = '';
@@ -168,6 +171,26 @@ class FreightLogic
             $item['region_name'] = rtrim($item['region_name'], ',');
         }
         return $freight;
+    }
+
+    public static function formatRegionNames($region, $regions)
+    {
+        if (empty($region)) {
+            return '未设置';
+        }
+
+        if ($region == 'all') {
+            return '全国';
+        }
+
+        $region_names = [];
+        foreach (explode(',', $region) as $id) {
+            if (isset($regions[$id])) {
+                $region_names[] = $regions[$id];
+            }
+        }
+
+        return empty($region_names) ? '未设置' : implode(',', $region_names);
     }
 
     public static function areaTree()

@@ -6,3 +6,4 @@
 /.env
 /public/upgrade/*
 !/public/upgrade/version.json
+!/public/upgrade/*.sql

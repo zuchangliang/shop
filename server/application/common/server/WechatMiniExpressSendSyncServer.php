@@ -7,6 +7,7 @@ use app\common\model\Delivery;
 use app\common\model\Express;
 use app\common\model\Order;
 use app\common\model\OrderGoods;
+use app\common\model\Pay;
 use app\common\model\RechargeOrder;
 use app\common\model\UserAuth;
 use EasyWeChat\Factory;
@@ -44,6 +45,11 @@ class WechatMiniExpressSendSyncServer
         try {
             $time   = time();
             $log    = 'wechat_mini_express_sync_order';
+
+            if (! static::shouldSyncOrder($order)) {
+                return false;
+            }
+
             $app    = static::getMiniApp();
             $user   = UserAuth::where('user_id', $order['user_id'])->where('client', Client_::mnp)->findOrEmpty();
     
@@ -153,6 +159,11 @@ class WechatMiniExpressSendSyncServer
         try {
             $time   = time();
             $log    = 'wechat_mini_express_sync_recharge';
+
+            if (! static::shouldSyncRecharge($recharge)) {
+                return false;
+            }
+
             $app    = static::getMiniApp();
             $user   = UserAuth::where('user_id', $recharge['user_id'])->where('client', Client_::mnp)->findOrEmpty();
         
@@ -224,6 +235,60 @@ class WechatMiniExpressSendSyncServer
     private static function getToken($app)
     {
         return $app->access_token->getToken()['access_token'];
+    }
+
+    private static function shouldSyncOrder(array $order) : bool
+    {
+        if (($order['order_source'] ?? 0) != Client_::mnp) {
+            return false;
+        }
+
+        if (($order['pay_way'] ?? 0) != Pay::WECHAT_PAY) {
+            return false;
+        }
+
+        if (($order['pay_status'] ?? 0) != Pay::ISPAID) {
+            return false;
+        }
+
+        if (empty($order['transaction_id'])) {
+            return false;
+        }
+
+        if (($order['wechat_mini_express_sync'] ?? 0) == 1) {
+            return false;
+        }
+
+        if (($order['delivery_type'] ?? 0) == Order::DELIVERY_STATUS_EXPRESS && ($order['shipping_status'] ?? 0) != 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function shouldSyncRecharge(array $recharge) : bool
+    {
+        if (($recharge['order_source'] ?? 0) != Client_::mnp) {
+            return false;
+        }
+
+        if (($recharge['pay_way'] ?? 0) != Pay::WECHAT_PAY) {
+            return false;
+        }
+
+        if (($recharge['pay_status'] ?? 0) != Pay::ISPAID) {
+            return false;
+        }
+
+        if (empty($recharge['transaction_id'])) {
+            return false;
+        }
+
+        if (($recharge['wechat_mini_express_sync'] ?? 0) == 1) {
+            return false;
+        }
+
+        return true;
     }
     
     static function wechatSyncCheck($order)

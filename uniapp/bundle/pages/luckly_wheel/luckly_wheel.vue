@@ -152,7 +152,7 @@
 	/* pages/luckly_wheel/luckly_wheel.wxss */
 
 	.luckly-wheel-container {
-		background-color: $-color-primary;
+		background-color: $color-primary;
 		padding-bottom: 20rpx;
 
 		.header {

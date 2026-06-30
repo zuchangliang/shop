@@ -33,6 +33,7 @@ use app\common\model\Express;
 use app\common\server\AreaServer;
 use app\common\server\printing\Kuaidi100;
 use app\common\server\UrlServer;
+use app\common\server\WechatMiniExpressSendSyncServer;
 use Exception;
 use think\Db;
 use think\facade\Hook;
@@ -299,6 +300,9 @@ class FaceSheetOrderLogic
                 'invoice_no'    => $result['data']['kuaidinum'],
                 'time'          => date('Y-m-d H:i:s')
             ]);
+
+            $syncOrder = Order::where('id', $order['id'])->find();
+            $syncOrder && WechatMiniExpressSendSyncServer::_sync_order($syncOrder->toArray());
 
             return true;
         } catch (Exception $e) {

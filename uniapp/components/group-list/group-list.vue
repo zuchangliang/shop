@@ -159,7 +159,7 @@
 			}
 			.group-footer {
 				height: 100rpx;
-				border-top: $-solid-border;
+				border-top: $solid-border;
 				padding: 0 24rpx;
 				.btn {
 					width: 244rpx;

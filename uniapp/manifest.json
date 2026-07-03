@@ -166,6 +166,7 @@
         "optimization" : {
             "subPackages" : true
         },
+        "__usePrivacyCheck__" : true,
         "requiredPrivateInfos" : [ "getLocation", "chooseAddress" ],
         "permission" : {
             "scope.userLocation" : {

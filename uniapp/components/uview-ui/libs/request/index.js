@@ -27,12 +27,20 @@ class Request {
 		options.method = options.method || this.config.method;
 
 		return new Promise((resolve, reject) => {
+			let loadingTimer = null;
+			let loadingShown = false;
 			options.complete = (response) => {
-				// 请求返回后，隐藏loading(如果请求返回快的话，可能会没有loading)
-				uni.hideLoading();
 				// 清除定时器，如果请求回来了，就无需loading
-				clearTimeout(this.config.timer);
-				this.config.timer = null;
+				if (loadingTimer) {
+					clearTimeout(loadingTimer);
+					if (this.config.timer === loadingTimer) {
+						this.config.timer = null;
+					}
+				}
+				// 只有本次请求真正打开过loading时才关闭，避免快请求触发微信show/hide不配对警告
+				if (loadingShown) {
+					uni.hideLoading();
+				}
 				// 判断用户对拦截返回数据的要求，如果originalData为true，返回所有的数据(response)到拦截器，否则只返回response.data
 				if(this.config.originalData) {
 					// 判断是否存在拦截器
@@ -82,13 +90,15 @@ class Request {
 			// 加一个是否已有timer定时器的判断，否则有两个同时请求的时候，后者会清除前者的定时器id
 			// 而没有清除前者的定时器，导致前者超时，一直显示loading
 			if(this.config.showLoading && !this.config.timer) {
-				this.config.timer = setTimeout(() => {
+				loadingTimer = setTimeout(() => {
 					uni.showLoading({
 						title: this.config.loadingText,
 						mask: this.config.loadingMask
 					})
+					loadingShown = true;
 					this.config.timer = null;
 				}, this.config.loadingTime);
+				this.config.timer = loadingTimer;
 			}
 			uni.request(options);
 		})

@@ -23,7 +23,7 @@ author: likeshop.cn.team //
         :key="index"
         hover-class="none"
         class="order-item bg-white mt20"
-        :url="'/pages/order_details/order_details?id=' + item.id"
+        :url="'/bundle_order/pages/order_details/order_details?id=' + item.id"
       >
         <view class="order-header row-between">
           <view class="row">
@@ -111,7 +111,7 @@ author: likeshop.cn.team //
             v-if="item.delivery_btn"
             @tap.stop="
               goPage(
-                '/bundle/pages/goods_logistics/goods_logistics?id=' + item.id
+                '/bundle_order/pages/goods_logistics/goods_logistics?id=' + item.id
               )
             "
           >
@@ -356,7 +356,7 @@ export default {
       // this.showLoading = true
 
       uni.navigateTo({
-        url: `/pages/payment/payment?from=${"order"}&order_id=${id}`,
+        url: `/bundle_order/pages/payment/payment?from=${"order"}&order_id=${id}`,
       });
 
       // prepay({

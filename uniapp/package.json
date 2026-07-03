@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node tests/login-loading.test.js && node tests/request-loading.test.js && node tests/server-auth-login.test.js && node tests/wx-code.test.js && node tests/mplogin-popup-avatar.test.js && node tests/login-privacy.test.js && node tests/wechat-lib-version.test.js && node tests/subpackage-size.test.js",
+    "compact:mp-weixin": "node scripts/compact-mp-weixin.js",
     "build": "./autoRelease.sh"
   },
   "keywords": [],

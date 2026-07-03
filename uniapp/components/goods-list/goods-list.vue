@@ -2,7 +2,7 @@
 	<view class="goods-list">
 		<view v-if="type === 'double'" class="goods-double row-between">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20" hover-class="none" open-type="navigate"
-			 :url="'/pages/goods_details/goods_details?id=' + (isBargain ? item.goods_id : item.id)">
+			 :url="'/bundle_activity/pages/goods_details/goods_details?id=' + (isBargain ? item.goods_id : item.id)">
 				<view class="goods-img" style="width: 347rpx;height:347rpx;">
 					<custom-image :lazy-load="true" width="347rpx" height="347rpx" radius="10rpx" lazy-load :src="item.image"></custom-image>
 				</view>
@@ -17,7 +17,7 @@
 		</view>
 		<view v-if="type === 'hot'" class="goods-hot">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20 row" hover-class="none" open-type="navigate"
-			 :url="'/pages/goods_details/goods_details?id=' + item.id">
+			 :url="'/bundle_activity/pages/goods_details/goods_details?id=' + item.id">
 				<view class="goods-img" style="width: 180rpx;height:180rpx;">
 					<custom-image :lazy-load="true" width="180rpx" height="180rpx" radius="6rpx" lazy-load :src="item.image"></custom-image>
 				</view>
@@ -38,7 +38,7 @@
 		</view>
 		<view v-if="type === 'home-hot'" class="goods-home-hot goods-hot">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mb20 row" hover-class="none" open-type="navigate"
-			 :url="'/pages/goods_details/goods_details?id=' + item.id">
+			 :url="'/bundle_activity/pages/goods_details/goods_details?id=' + item.id">
 				<view class="goods-img">
 					<custom-image :lazy-load="true" width="240rpx" height="240rpx" radius="6rpx" lazy-load :src="item.image"></custom-image>
 				</view>
@@ -59,7 +59,7 @@
 		</view>
 		<view v-if="type === 'new'" class="goods-new">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20 row" hover-class="none" open-type="navigate"
-			 :url="'/pages/goods_details/goods_details?id=' + item.id">
+			 :url="'/bundle_activity/pages/goods_details/goods_details?id=' + item.id">
 				<view class="goods-img">
 					<custom-image :lazy-load="true" width="240rpx" height="240rpx" radius="10rpx" lazy-load :src="item.image"></custom-image>
 				</view>
@@ -82,7 +82,7 @@
 		</view>
 		<view v-if="type === 'one'" class="goods-one mt20">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white row" hover-class="none" open-type="navigate"
-			 :url="'/pages/goods_details/goods_details?id=' + item.id">
+			 :url="'/bundle_activity/pages/goods_details/goods_details?id=' + item.id">
 				<view class="goods-img" style="width: 200rpx;height:200rpx;">
 					<custom-image :lazy-load="true" width="200rpx" height="200rpx" radius="6rpx" lazy-load :src="item.image"></custom-image>
 				</view>
@@ -139,7 +139,7 @@
 				}
 			}
 		}
-		
+
 		.goods-hot {
 			&.goods-home-hot {
 				.item {
@@ -154,17 +154,17 @@
 				position: relative;
 				padding: 30rpx 20rpx;
 				border-radius: 10rpx;
-			
+
 				.goods-info {
 					width: 450rpx;
-			
+
 					.sale {
 						padding: 4rpx 18rpx;
 						color: #F79C0C;
 						background-color: rgba(247, 156, 12, .1);
 					}
 				}
-			
+
 				.paixu,
 				.number {
 					position: absolute;
@@ -177,11 +177,11 @@
 					color: #621E09;
 				}
 			}
-		} 
+		}
 
 		.goods-one .item {
 			padding: 20rpx;
-			
+
 			&:not(:last-of-type) {
 				margin-bottom: 20rpx;
 			}
@@ -190,6 +190,6 @@
 		    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
 		    border-radius: 10rpx;
 		}
-		
+
 	}
 </style>

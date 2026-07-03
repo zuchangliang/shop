@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const { compactMpWeixin } = require('./scripts/compact-mp-weixin')
 
 class CopyMpWeixinProjectConfigPlugin {
     apply(compiler) {
@@ -24,6 +25,7 @@ class CopyMpWeixinProjectConfigPlugin {
             }
 
             fs.copyFileSync(source, target)
+            compactMpWeixin(path.dirname(target), { silent: true })
         })
     }
 }

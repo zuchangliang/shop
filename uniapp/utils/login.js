@@ -24,7 +24,11 @@ export function getWxCode() {
 	return new Promise((resolve, reject) => {
 		uni.login({
 			success(res) {
-				resolve(res.code);
+				if (res.code) {
+					resolve(res.code);
+					return;
+				}
+				reject(res);
 			},
 
 			fail(res) {
@@ -54,10 +58,10 @@ export function getUserProfile() {
 export const wxMnpLogin = trottle(_wxMnpLogin, 1000)
 //小程序静默授权
 async function _wxMnpLogin() {
-	
+
 	const code = await getWxCode()
 	const {code:loginCode, data: loginData} = await silentLogin({
-		code 
+		code
 	})
 	const {
 		options,
@@ -78,7 +82,7 @@ async function _wxMnpLogin() {
 			})
 		}
 	} else {
-		const loginRoute = '/pages/login/login'
+		const loginRoute = '/bundle_user/pages/login/login'
 		if (!tabbarList.includes(route)) {
 			if(loginRoute.includes(route)) return
 			uni.navigateTo({
@@ -92,14 +96,14 @@ export const toLogin = trottle(_toLogin, 1000)
 // 去登录
 function _toLogin() {
 	uni.navigateTo({
-		url: '/pages/login/login'
+		url: '/bundle_user/pages/login/login'
 	});
 	//#ifdef  H5
-	const pathLogin = 'pages/login/login'
+	const pathLogin = 'bundle_user/pages/login/login'
 	let path = currentPage().route
 	if (path != pathLogin) {
 		uni.navigateTo({
-			url: '/pages/login/login'
+			url: '/bundle_user/pages/login/login'
 		})
 	}
 	// #endif

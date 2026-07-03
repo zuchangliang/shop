@@ -1,6 +1,6 @@
 <template>
 	<view class="group-list">
-		<navigator v-for="(item, index) in groupList" :key="index" class="item bg-white mt20" hover-class="none" :url="'/pages/order_details/order_details?id=' + item.order_id">
+		<navigator v-for="(item, index) in groupList" :key="index" class="item bg-white mt20" hover-class="none" :url="'/bundle_order/pages/order_details/order_details?id=' + item.order_id">
 			<view class="group-header row-between">
 				<view>
 					<view v-if="item.team_end_time">{{item.team_end_time}}</view>
@@ -27,7 +27,7 @@
 			<view class="group-footer row" v-if="item.pay_status == 0">
 				<view style="flex: 1"></view>
 				<view>
-					<navigator v-if="item.pay_status == 0" hover-class="none" :url="'/pages/order_details/order_details?id=' + item.order_id">
+					<navigator v-if="item.pay_status == 0" hover-class="none" :url="'/bundle_order/pages/order_details/order_details?id=' + item.order_id">
 						<button size="sm" class="br60 lighter btn" type="primary" hover-class="none">
 							去付款
 						</button>
@@ -75,7 +75,7 @@
 			this.getUserGroupFun();
 		},
 		destroyed: function() { // 在组件实例被从页面节点树移除时执行
-			
+
 		},
 		methods: {
 			reflesh() {
@@ -104,7 +104,7 @@
 				this.page = data.page
 				this.groupList = data.dataList
 				this.status = data.status
-			
+
 			}
 
 		},

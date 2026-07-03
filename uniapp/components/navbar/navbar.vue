@@ -58,7 +58,7 @@
 					icon: require('@/static/images/icon_home.png'),
 					type: 'switchTab'
 				}, {
-					url: '/pages/goods_search/goods_search',
+					url: '/bundle_activity/pages/goods_search/goods_search',
 					name: '搜索',
 					icon: require('@/static/images/icon_search.png'),
 					type: 'navigate'
@@ -125,7 +125,7 @@
 				display: flex;
 				justify-content: center;
 				position: relative;
-				
+
 				.navbar-float {
 					position: absolute;
 					top: 40px;

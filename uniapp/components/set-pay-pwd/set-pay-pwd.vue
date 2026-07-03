@@ -134,7 +134,7 @@ export default {
         },
         toSetting() {
             uni.navigateTo({
-                url: '/bundle/pages/user_profile/user_profile'
+                url: '/bundle_user/pages/user_profile/user_profile'
             })
             this.$refs.uModal.clearLoading()
         },

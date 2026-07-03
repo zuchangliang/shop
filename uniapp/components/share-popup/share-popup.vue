@@ -133,7 +133,7 @@
 			async getPoster() {
 				if (!this.isLogin) {
 					return uni.navigateTo({
-						url: '/pages/login/login'
+						url: '/bundle_user/pages/login/login'
 					});
 				}
 				uni.showLoading({

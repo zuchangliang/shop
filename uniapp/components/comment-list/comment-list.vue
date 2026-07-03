@@ -8,7 +8,7 @@
                 >
                 <navigator
                     class="comment-goods row"
-                    :url="'/pages/goods_details/goods_details?id=' + item.goods_id"
+                    :url="'/bundle_activity/pages/goods_details/goods_details?id=' + item.goods_id"
                     hover-class="none"
                 >
                     <custom-image
@@ -48,7 +48,7 @@
                 >
                     <view class="btn row-center primary br60">评价商品</view>
                 </view>
-                <!-- 		<navigator v-show="!(type == 2)" class="evaluate-footer row-end" hover-class="none" :url="'/bundle/pages/goods_reviews/goods_reviews?id=' + item.id">
+                <!-- 		<navigator v-show="!(type == 2)" class="evaluate-footer row-end" hover-class="none" :url="'/bundle_order/pages/goods_reviews/goods_reviews?id=' + item.id">
 				<view class="btn row-center primary br60">评价商品</view>
 			</navigator> -->
                 <view v-show="!(type == 1 || !item.comment)" class="evaluate-footer">
@@ -140,7 +140,7 @@ export default {
         goCommentGoods({ id, del }) {
             if (+del) return
             uni.navigateTo({
-                url: `/bundle/pages/goods_reviews/goods_reviews?id=${id}`
+                url: `/bundle_order/pages/goods_reviews/goods_reviews?id=${id}`
             })
         },
 

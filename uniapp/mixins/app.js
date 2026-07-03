@@ -24,8 +24,8 @@ export default {
             await wechath5.config()
             if (
                 [
-                    'pages/goods_details/goods_details',
-                    'bundle/pages/bargain_process/bargain_process'
+                    'bundle_activity/pages/goods_details/goods_details',
+                    'bundle_activity/pages/bargain_process/bargain_process'
                 ].includes(route)
             ) {
                 return

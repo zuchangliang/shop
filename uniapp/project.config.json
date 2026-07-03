@@ -39,7 +39,7 @@
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.14.4",
+  "libVersion": "3.16.1",
   "appid": "wx48fa13a3cc0dcf72",
   "projectname": "LikeShop",
   "debugOptions": {

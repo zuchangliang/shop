@@ -91,7 +91,7 @@
                 <navigator
                     class="mr20"
                     hover-class="none"
-                    :url="'/bundle/pages/goods_reviews/goods_reviews?id=' + item.id"
+                    :url="'/bundle_order/pages/goods_reviews/goods_reviews?id=' + item.id"
                     v-if="item.comment_btn"
                 >
                     <button size="xs" class="plain br60" hover-class="none">评价晒图</button>
@@ -100,7 +100,7 @@
                     v-if="item.refund_btn"
                     hover-class="none"
                     :url="
-                        '/bundle/pages/apply_refund/apply_refund?order_id=' +
+                        '/bundle_order/pages/apply_refund/apply_refund?order_id=' +
                         item.order_id +
                         '&item_id=' +
                         item.item_id
@@ -155,7 +155,7 @@ export default {
         toGoods(id) {
             if (!this.link) return
             uni.navigateTo({
-                url: `/pages/goods_details/goods_details?id=${id}`
+                url: `/bundle_activity/pages/goods_details/goods_details?id=${id}`
             })
         }
     }

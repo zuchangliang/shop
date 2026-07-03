@@ -17,14 +17,14 @@
                 <view class="flex1 row nav-search" v-show="navSearch">
                     <navigator
                         hover-class="none"
-                        @click="goPage('/bundle/pages/message_center/message_center')"
+                        @click="goPage('/bundle_user/pages/message_center/message_center')"
                     >
                         <image class="icon-md ml30" src="/static/images/icon_news.png"> </image>
                     </navigator>
                     <navigator
                         class="ml20 flex1 mr20"
                         hover-class="none"
-                        url="/pages/goods_search/goods_search"
+                        url="/bundle_activity/pages/goods_search/goods_search"
                     >
                         <u-search
                             wrap-bg-color="transparent"
@@ -40,14 +40,14 @@
         <view class="flex1 row" v-if="showLogo">
             <navigator
                 hover-class="none"
-                @tap="goPage('/bundle/pages/message_center/message_center')"
+                @tap="goPage('/bundle_user/pages/message_center/message_center')"
             >
                 <image class="icon-md ml30" src="/static/images/icon_news.png"> </image>
             </navigator>
             <navigator
                 class="ml20 flex1 mr20"
                 hover-class="none"
-                url="/pages/goods_search/goods_search"
+                url="/bundle_activity/pages/goods_search/goods_search"
             >
                 <u-search
                     wrap-bg-color="transparent"
@@ -92,7 +92,7 @@
                     class="information bg-white row mt20"
                     hover-class="none"
                     open-type="navigate"
-                    url="/pages/news_list/news_list"
+                    url="/bundle_activity/pages/news_list/news_list"
                 >
                     <image class="icon-toutiao" src="/static/images/icon_toutiao.png"></image>
                     <text class="gap-line"></text>
@@ -133,7 +133,7 @@
                                 v-for="(item, index) in activityArea"
                                 :key="index"
                                 hover-class="none"
-                                :url="`/bundle/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
+                                :url="`/bundle_activity/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
                             >
                                 <view class="column-center">
                                     <custom-image
@@ -156,7 +156,7 @@
                             hover-class="none"
                             class="row activity-header white"
                             open-type="navigate"
-                            url="/bundle/pages/goods_seckill/goods_seckill"
+                            url="/bundle_activity/pages/goods_seckill/goods_seckill"
                         >
                             <view class="title xxl bold">超值秒杀</view>
                             <view class="row flex1">
@@ -189,7 +189,7 @@
                             hover-class="none"
                             class="row activity-header"
                             open-type="navigate"
-                            url="/bundle/pages/hot_list/hot_list"
+                            url="/bundle_activity/pages/hot_list/hot_list"
                         >
                             <view class="title flex1">
                                 <image
@@ -276,8 +276,8 @@
         <lyg-popup
             v-if="appConfig.app_agreement"
             title="用户使用及隐私保护政策提示"
-            protocolPath="/bundle/pages/server_explan/server_explan?type=0"
-            policyPath="/bundle/pages/server_explan/server_explan?type=1"
+            protocolPath="/bundle_order/pages/server_explan/server_explan?type=0"
+            policyPath="/bundle_order/pages/server_explan/server_explan?type=1"
             policyStorageKey="has_read_privacy"
         >
         </lyg-popup>

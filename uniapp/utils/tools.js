@@ -241,7 +241,7 @@ export function menuJump(item) {
     case 2:
       // webview
       uni.navigateTo({
-        url: "/pages/webview/webview?url=" + link,
+        url: "/bundle_user/pages/webview/webview?url=" + link,
       });
       break;
 
@@ -374,9 +374,9 @@ export const tabbarList = [
 ];
 // 登录注册相关
 export const acountList = [
-  "pages/login/login",
-  "pages/forget_pwd/forget_pwd",
-  "pages/register/register",
+  "bundle_user/pages/login/login",
+  "bundle_user/pages/forget_pwd/forget_pwd",
+  "bundle_user/pages/register/register",
 ];
 
 /**

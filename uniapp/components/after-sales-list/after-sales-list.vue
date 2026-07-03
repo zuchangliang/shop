@@ -52,7 +52,7 @@
                   goPage(
                     $event,
                     items.after_sale.able_apply,
-                    '/bundle/pages/apply_refund/apply_refund',
+                    '/bundle_order/pages/apply_refund/apply_refund',
                     items.order_id,
                     item.item_id
                   )
@@ -84,7 +84,7 @@
             hover-class="none"
             class="sale-goods-show"
             :url="
-              '/bundle/pages/after_sales_detail/after_sales_detail?afterSaleId=' +
+              '/bundle_order/pages/after_sales_detail/after_sales_detail?afterSaleId=' +
               items.after_sale.after_sale_id +
               '&order_id=' +
               items.order_id
@@ -141,7 +141,7 @@
             <navigator
               hover-class="none"
               :url="
-                '/bundle/pages/input_express_info/input_express_info?id=' +
+                '/bundle_order/pages/input_express_info/input_express_info?id=' +
                 items.after_sale.after_sale_id
               "
               class="row-center normal br60 grey-btn nr"
@@ -158,7 +158,7 @@
           hover-class="none"
           class="sale-item bg-white mt20"
           :url="
-            '/bundle/pages/after_sales_detail/after_sales_detail?afterSaleId=' +
+            '/bundle_order/pages/after_sales_detail/after_sales_detail?afterSaleId=' +
             items.after_sale.after_sale_id
           "
         >

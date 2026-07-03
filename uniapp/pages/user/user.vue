@@ -39,7 +39,7 @@
                     <view
                         class="user-opt"
                         style="margin-right: 30rpx"
-                        @tap="goPage('/bundle/pages/message_center/message_center')"
+                        @tap="goPage('/bundle_user/pages/message_center/message_center')"
                     >
                         <view class="dot row-center" v-if="userInfo.notice_num"></view>
                         <image
@@ -47,7 +47,7 @@
                             src="/static/images/icon_my_news.png"
                         ></image>
                     </view>
-                    <view class="user-opt" @tap="goPage('/bundle/pages/user_profile/user_profile')">
+                    <view class="user-opt" @tap="goPage('/bundle_user/pages/user_profile/user_profile')">
                         <image
                             style="width: 58rpx; height: 58rpx"
                             src="/static/images/icon_my_setting.png"
@@ -55,7 +55,7 @@
                     </view>
                 </view>
             </view>
-            <view class="member column-end" @tap="goPage('/pages/user_vip/user_vip')">
+            <view class="member column-end" @tap="goPage('/bundle_user/pages/user_vip/user_vip')">
                 <view class="member-entery row-between">
                     <view class="row">
                         <image class="icon-md" src="/static/images/icon_member.png"></image>
@@ -75,21 +75,21 @@
             <view class="nav row">
                 <view
                     class="column-center mb20 assets-item"
-                    @tap="goPage('/bundle/pages/user_wallet/user_wallet')"
+                    @tap="goPage('/bundle_user/pages/user_wallet/user_wallet')"
                 >
                     <view class="xl primary">{{ userInfo.user_money }}</view>
                     <view class="sm">余额</view>
                 </view>
                 <view
                     class="column-center mb20 assets-item"
-                    @tap="goPage('/bundle/pages/user_sign/user_sign')"
+                    @tap="goPage('/bundle_activity/pages/user_sign/user_sign')"
                 >
                     <view class="xl primary">{{ userInfo.user_integral }}</view>
                     <view class="sm">积分</view>
                 </view>
                 <view
                     class="column-center mb20 assets-item"
-                    @tap="goPage('/pages/user_coupon/user_coupon')"
+                    @tap="goPage('/bundle_user/pages/user_coupon/user_coupon')"
                 >
                     <view class="xl primary">{{ userInfo.coupon }}</view>
                     <view class="sm">优惠券</view>
@@ -97,7 +97,7 @@
             </view>
         </view>
         <view class="order-nav bg-white">
-            <view class="title row-between" @tap="goPage('/pages/user_order/user_order')">
+            <view class="title row-between" @tap="goPage('/bundle_order/pages/user_order/user_order')">
                 <view class="lg">我的订单</view>
                 <view class="muted sm row">
                     全部订单
@@ -107,7 +107,7 @@
             <view class="nav row">
                 <view
                     class="item column-center mb20"
-                    @tap="goPage('/pages/user_order/user_order?type=pay')"
+                    @tap="goPage('/bundle_order/pages/user_order/user_order?type=pay')"
                 >
                     <view class="icon-contain">
                         <view v-if="userInfo.wait_pay" class="badge xs row-center bg-white">
@@ -119,7 +119,7 @@
                 </view>
                 <view
                     class="item column-center mb20"
-                    @tap="goPage('/pages/user_order/user_order?type=delivery')"
+                    @tap="goPage('/bundle_order/pages/user_order/user_order?type=delivery')"
                 >
                     <view class="icon-contain">
                         <view v-if="userInfo.wait_delivery" class="badge xs row-center bg-white">
@@ -131,7 +131,7 @@
                 </view>
                 <view
                     class="item column-center mb20"
-                    @tap="goPage('/pages/user_order/user_order?type=delivery')"
+                    @tap="goPage('/bundle_order/pages/user_order/user_order?type=delivery')"
                 >
                     <view class="icon-contain">
                         <view v-if="userInfo.wait_take" class="badge xs row-center bg-white">
@@ -143,7 +143,7 @@
                 </view>
                 <view
                     class="item column-center mb20"
-                    @tap="goPage('/bundle/pages/goods_comment_list/goods_comment_list')"
+                    @tap="goPage('/bundle_order/pages/goods_comment_list/goods_comment_list')"
                 >
                     <view class="icon-contain">
                         <view v-if="userInfo.wait_comment" class="badge xs row-center bg-white">
@@ -155,7 +155,7 @@
                 </view>
                 <view
                     class="item column-center mb20"
-                    @tap="goPage('/bundle/pages/post_sale/post_sale')"
+                    @tap="goPage('/bundle_order/pages/post_sale/post_sale')"
                 >
                     <view class="icon-contain">
                         <view v-if="userInfo.after_sale" class="badge xs row-center bg-white">
@@ -259,7 +259,7 @@ export default {
             let { isLogin } = this
             if (isLogin) {
                 uni.navigateTo({
-                    url: '/bundle/pages/user_set/user_set'
+                    url: '/bundle_user/pages/user_set/user_set'
                 })
                 return
             }

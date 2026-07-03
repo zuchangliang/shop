@@ -176,6 +176,32 @@ class OrderLogic
         return ['count' => $count, 'lists' => $lists];
     }
 
+    public static function getExportTitle()
+    {
+        return ['订单编号', '订单类型', '下单时间', '支付时间', '订单来源', '会员编号', '会员昵称', '会员等级', '商品信息', '商品编码', '商品数量', '运费金额', '商品总金额', '优惠金额', '应付金额', '支付方式', '收货人', '手机号码', '收货地址', '配送方式', '支付状态', '订单状态'];
+    }
+
+    public static function formatExportGoodsCodes($orderGoods, $goodsCodeMap = [])
+    {
+        $goodsCodes = [];
+        foreach ($orderGoods as $subItem) {
+            $goodsInfo = json_decode($subItem['goods_info'] ?? '', true);
+            $snapshotCode = '';
+            if (is_array($goodsInfo)) {
+                $snapshotCode = $goodsInfo['goods_code'] ?? ($goodsInfo['code'] ?? '');
+            }
+
+            $goodsId = $subItem['goods_id'] ?? 0;
+            $goodsCode = $snapshotCode !== '' ? $snapshotCode : ($goodsCodeMap[$goodsId] ?? '');
+            $goodsCode = trim((string)$goodsCode);
+            if ($goodsCode !== '') {
+                $goodsCodes[] = $goodsCode;
+            }
+        }
+
+        return implode('、', $goodsCodes);
+    }
+
     public static function exportFile($get)
     {
         $where[] = ['o.del', '=', 0];
@@ -258,8 +284,20 @@ class OrderLogic
                 ->toArray();
 
         $userLevel = UserLevel::where('del', 0)->column(['id','name'], 'id');
+        $goodsIds = [];
+        foreach ($lists as $item) {
+            foreach ($item['order_goods'] as $subItem) {
+                if (!empty($subItem['goods_id'])) {
+                    $goodsIds[] = $subItem['goods_id'];
+                }
+            }
+        }
+        $goodsCodeMap = [];
+        if (!empty($goodsIds)) {
+            $goodsCodeMap = Db::name('goods')->where('id', 'in', array_unique($goodsIds))->column('code', 'id');
+        }
 
-        $exportTitle = ['订单编号', '订单类型', '下单时间', '支付时间', '订单来源', '会员编号', '会员昵称', '会员等级', '商品信息', '商品数量', '运费金额', '商品总金额', '优惠金额', '应付金额', '支付方式', '收货人', '手机号码', '收货地址', '配送方式', '支付状态', '订单状态'];
+        $exportTitle = self::getExportTitle();
         $exportExt = 'xls';
         $exportData = [];
         foreach ($lists as $item){
@@ -272,7 +310,8 @@ class OrderLogic
                 $goodsInfo = json_decode($subItem['goods_info'], true);
                 $goodsStr.= '【'.$goodsInfo['goods_name'].' 规格:'.$goodsInfo['spec_value_str']. ' 数量:'.$subItem['goods_num']. '】';
             }
-            $exportData[] = [$orderSn, $item['order_type_text'], $item['create_time'], $item['pay_time'], $item['order_source_text'], $item['user_sn'], $item['user_nickname'], $level, $goodsStr,$item['total_num'], $item['shipping_price'], $item['goods_price'], $item['discount_amount'], $item['order_amount'], $item['pay_way_text'], $item['consignee'], $item['mobile'], $item['delivery_address'],$deliveryType, $item['pay_status_text'], $item['order_status_text']];
+            $goodsCode = self::formatExportGoodsCodes($item['order_goods'], $goodsCodeMap);
+            $exportData[] = [$orderSn, $item['order_type_text'], $item['create_time'], $item['pay_time'], $item['order_source_text'], $item['user_sn'], $item['user_nickname'], $level, $goodsStr, $goodsCode, $item['total_num'], $item['shipping_price'], $item['goods_price'], $item['discount_amount'], $item['order_amount'], $item['pay_way_text'], $item['consignee'], $item['mobile'], $item['delivery_address'],$deliveryType, $item['pay_status_text'], $item['order_status_text']];
         }
         return ['exportTitle'=> $exportTitle, 'exportData' => $exportData, 'exportExt'=>$exportExt, 'exportName'=>'订单列表'.date('Y-m-d H:i:s')];
     }

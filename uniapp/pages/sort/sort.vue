@@ -1,6 +1,6 @@
 <template>
 	<view class="sort">
-		<navigator class="header" hover-class="none" url="/pages/goods_search/goods_search">
+		<navigator class="header" hover-class="none" url="/bundle_activity/pages/goods_search/goods_search">
 			<u-search bg-color="#F4F4F4" :disabled="true"></u-search>
 		</navigator>
 		<view class="content">
@@ -40,7 +40,7 @@
 		onShow() {
 			this.getCartNum()
 		},
-		onShareAppMessage() {	
+		onShareAppMessage() {
 			const shareInfo = Cache.get('shareInfo')
 			return {
 				title: shareInfo.mnp_share_title,
@@ -90,6 +90,6 @@
 				height: calc(100vh - #{$header-height} - var(--window-top) - var(--window-bottom));
 			}
 		}
-		
+
 	}
 </style>

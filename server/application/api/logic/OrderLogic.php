@@ -484,7 +484,7 @@ class OrderLogic extends LogicBase
      */
     public static function getGoodsColumn($item_ids)
     {
-        $field = 'i.id as item_id,g.id as goods_id,g.name as goods_name,g.status,g.del,g.image,
+        $field = 'i.id as item_id,g.id as goods_id,g.name as goods_name,g.code,g.status,g.del,g.image,
         g.is_integral,g.is_member,g.give_integral_type,g.give_integral,g.free_shipping_type,
         g.free_shipping,g.free_shipping_template_id,i.image as spec_image,
         i.spec_value_str,i.spec_value_ids,i.price as goods_price,i.volume,i.stock,

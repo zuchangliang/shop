@@ -188,27 +188,32 @@ class UserServer
 
             //无头像需要更新头像
             if (empty($user_info['avatar'])) {
-                // 获取存储引擎
-                $config = [
-                    'default' => ConfigServer::get('storage', 'default', 'local'),
-                    'engine'  => ConfigServer::get('storage_engine')
-                ];
-
-                $avatar = '';     //头像路径
-                if ($config['default'] == 'local') {
-                    $file_name = md5($openid . $time) . '.jpeg';
-                    $avatar = download_file($avatar_url, 'uploads/user/avatar/', $file_name);
+                if (empty($avatar_url)) {
+                    $avatar = ConfigServer::get('website', 'user_image');
                 } else {
-                    $avatar = 'uploads/user/avatar/' . md5($openid . $time) . '.jpeg';
-                    $StorageDriver = new StorageDriver($config);
-                    if (!$StorageDriver->fetch($avatar_url, $avatar)) {
-                        throw new Exception( '头像保存失败:'. $StorageDriver->getError());
+                    // 获取存储引擎
+                    $config = [
+                        'default' => ConfigServer::get('storage', 'default', 'local'),
+                        'engine'  => ConfigServer::get('storage_engine')
+                    ];
+
+                    if ($config['default'] == 'local') {
+                        $file_name = md5($openid . $time) . '.jpeg';
+                        $avatar = download_file($avatar_url, 'uploads/user/avatar/', $file_name);
+                    } else {
+                        $avatar = 'uploads/user/avatar/' . md5($openid . $time) . '.jpeg';
+                        $StorageDriver = new StorageDriver($config);
+                        if (!$StorageDriver->fetch($avatar_url, $avatar)) {
+                            throw new Exception( '头像保存失败:'. $StorageDriver->getError());
+                        }
                     }
                 }
 
                 $data['avatar'] = $avatar;
                 $data['update_time'] = $time;
-                $data['nickname'] = $nickname;
+                if (!empty($nickname)) {
+                    $data['nickname'] = $nickname;
+                }
                 Db::name('user')
                     ->where(['id' => $user_info['id']])
                     ->update($data);

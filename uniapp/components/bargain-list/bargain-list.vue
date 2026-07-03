@@ -1,5 +1,5 @@
 <template>
-    <view class="bargain-list-container">       
+    <view class="bargain-list-container">
         <view class="bargain-list mt20" v-for="(item, index) in lists" :key="item.id">
             <view class="header row-between">
                 <view class="count-down-container row">
@@ -9,7 +9,7 @@
                     {{item.status_text}}
                 </view>
             </view>
-            <navigator class="content row" hover-class="none" :url="'/bundle/pages/bargain_process/bargain_process?bargainId='+item.id">
+            <navigator class="content row" hover-class="none" :url="'/bundle_activity/pages/bargain_process/bargain_process?bargainId='+item.id">
                 <custom-image width="180rpx" height="180rpx" :src="item.image" radius="10rpx" />
                 <view class="goods-info">
                     <view class="goods-name line2 nr normal">
@@ -32,14 +32,14 @@
                 <!--                <view hover-class="none" class="purchase-btn primary row-center br60 footer-btn" v-if="item.buy_btn" @click="onPurchaseClick(item.id, item.item_id)">
                     直接购买
                 </view> -->
-                <navigator hover-class="none" :url="'/bundle/pages/bargain_process/bargain_process?bargainId='+item.id" class="bargain-btn footer-btn white row-center br60" v-if="item.btn_tips != ''">
+                <navigator hover-class="none" :url="'/bundle_activity/pages/bargain_process/bargain_process?bargainId='+item.id" class="bargain-btn footer-btn white row-center br60" v-if="item.btn_tips != ''">
                     {{item.btn_tips}}
                 </navigator>
-                <!--                <navigator hover-class="none" class="bargain-btn white row-center br60 footer-btn" v-if="item.pay_btn" :url="'/pages/order_details/order_details?id=' + item.order_id">
+                <!--                <navigator hover-class="none" class="bargain-btn white row-center br60 footer-btn" v-if="item.pay_btn" :url="'/bundle_order/pages/order_details/order_details?id=' + item.order_id">
                     去支付
                 </navigator> -->
             </view>
-        </view> 
+        </view>
         <loading-footer :status="loadingStatus" slotEmpty>
             <view class="data-null column-center" slot="empty">
                 <image class="img-null" src="/static/images/order_null.png" />
@@ -73,7 +73,7 @@
              this.$getBargainActivityList()
         },
         onReachBottom() {
-            
+
         },
         methods: {
             $getBargainActivityList() {
@@ -95,7 +95,7 @@
                     goods
                 }
                 uni.navigateTo({
-                	url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent(JSON.stringify(params)) + "&bargain_launch_id=" + bargainId
+                    url: '/bundle_order/pages/confirm_order/confirm_order?data=' + encodeURIComponent(JSON.stringify(params)) + "&bargain_launch_id=" + bargainId
                 });
             }
         }

@@ -39,6 +39,14 @@ $matched = FreightLogic::matchFreightConfigByAddress($freights, $address);
 assert_same(2, $matched['id'], 'specific region should win over national rule');
 
 $matched = FreightLogic::matchFreightConfigByAddress([
+    ['id' => 4, 'region' => '650000', 'first_money' => 30],
+    ['id' => 5, 'region' => '650100', 'first_money' => 40],
+    ['id' => 6, 'region' => '650102', 'first_money' => 50],
+    ['id' => 7, 'region' => 'all', 'first_money' => 8],
+], $address);
+assert_same(6, $matched['id'], 'district rule should win over city and province rules');
+
+$matched = FreightLogic::matchFreightConfigByAddress([
     ['id' => 3, 'region' => 'all', 'first_money' => 8],
 ], $address);
 assert_same(3, $matched['id'], 'national rule should be used as fallback');

@@ -262,7 +262,7 @@
         //商家同意
         $('#agree').click(function () {
             layer.confirm(
-                "提示：该笔订单通过" + pay_way + "付款，商家同意后，退款将自动原路退回会员账户。"+"<br/>"+
+                "提示：该笔订单通过" + pay_way + "付款，商家同意后将进入下一步售后流程，请在待退款状态继续确认退款。"+"<br/>"+
                 "退款方式："+ refund_type + "<br/>"+
                 "退款金额："+ "<span style='color: red'>"+refund_price+"</span>", {
                 btn: ['确认','取消'] //按钮
@@ -324,7 +324,7 @@
         //商家收货
         $('#take_goods').click(function () {
             layer.confirm(
-                "提示：该笔订单通过" + pay_way + "付款，商家同意后，退款将自动原路退回会员账户。"+"<br/>"+
+                "提示：该笔订单通过" + pay_way + "付款，商家收货后将进入待退款状态，请继续确认退款。"+"<br/>"+
                 "退款方式："+ refund_type + "<br/>"+
                 "退款金额："+ "<span style='color: red'>"+refund_price+"</span>"+ "<br/>"+
                 "退货地址："+ refund_address, {

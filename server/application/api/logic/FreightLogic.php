@@ -186,17 +186,28 @@ class FreightLogic
      */
     public static function isAddressInRegion($region, $address)
     {
+        return self::getRegionMatchPriority($region, $address) >= 0;
+    }
+
+    /**
+     * Desc: 获取地区匹配优先级，区县 > 城市 > 省份 > 全国
+     * @param $region
+     * @param $address
+     * @return int
+     */
+    private static function getRegionMatchPriority($region, $address)
+    {
         if (empty($region) || empty($address)) {
-            return false;
+            return -1;
         }
 
         $region = trim((string)$region);
         if ($region === '') {
-            return false;
+            return -1;
         }
 
         if ($region === 'all') {
-            return true;
+            return 0;
         }
 
         $region_ids = array_map('trim', explode(',', $region));
@@ -205,18 +216,19 @@ class FreightLogic
         });
 
         $address_ids = [
-            isset($address['district_id']) ? (string)$address['district_id'] : '',
-            isset($address['city_id']) ? (string)$address['city_id'] : '',
-            isset($address['province_id']) ? (string)$address['province_id'] : '',
+            'district_id' => 3,
+            'city_id' => 2,
+            'province_id' => 1,
         ];
 
-        foreach ($address_ids as $id) {
+        foreach ($address_ids as $field => $priority) {
+            $id = isset($address[$field]) ? (string)$address[$field] : '';
             if ($id !== '' && in_array($id, $region_ids, true)) {
-                return true;
+                return $priority;
             }
         }
 
-        return false;
+        return -1;
     }
 
     /**
@@ -228,16 +240,25 @@ class FreightLogic
     public static function matchFreightConfigByAddress($freights, $address)
     {
         $national_freight = [];
+        $best_freight = [];
+        $best_priority = 0;
 
         foreach ($freights as $freight) {
-            if (($freight['region'] ?? '') === 'all') {
+            $priority = self::getRegionMatchPriority($freight['region'] ?? '', $address);
+
+            if ($priority === 0) {
                 $national_freight = $freight;
                 continue;
             }
 
-            if (self::isAddressInRegion($freight['region'] ?? '', $address)) {
-                return $freight;
+            if ($priority > $best_priority) {
+                $best_priority = $priority;
+                $best_freight = $freight;
             }
+        }
+
+        if (!empty($best_freight)) {
+            return $best_freight;
         }
 
         //会员的省市区id在商家的运费模板(指定地区)中找不到,查一下商家的全国运费模板

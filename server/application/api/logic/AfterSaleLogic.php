@@ -188,7 +188,7 @@ class AfterSaleLogic extends LogicBase
         try {
             //1,增加售后记录
             $order_goods = Db::name('order_goods g')
-                ->field('g.id,g.goods_num,g.total_pay_price,g.order_id,g.refund_status,g.goods_id')
+                ->field('g.id,g.goods_num,g.total_pay_price,g.order_id,g.refund_status,g.goods_id,o.order_status')
                 ->join('order o', 'o.id = g.order_id')
                 ->where(['order_id' => $post['order_id'], 'g.item_id' => $post['item_id']])
                 ->find();
@@ -204,7 +204,7 @@ class AfterSaleLogic extends LogicBase
                 'refund_reason' => trim($post['reason']),
                 'refund_remark' => isset($post['remark']) ? trim($post['remark']) : '',
                 'refund_image' => isset($post['img']) ? $post['img'] : '',
-                'refund_type' => $post['refund_type'],
+                'refund_type' => self::normalizeRefundTypeForOrderStatus($post['refund_type'], $order_goods['order_status']),
                 'refund_price' => $order_goods['total_pay_price'] + OrderGoodsLogic::getRefundExpressMoney($order_goods['id']),
                 'create_time' => time(),
             ];
@@ -375,8 +375,9 @@ class AfterSaleLogic extends LogicBase
         try {
             $id = $post['id'];
             $after_sale = AfterSale::get($id);
+            $order_status = Order::where('id', $after_sale['order_id'])->value('order_status');
 
-            $after_sale->refund_type = $post['refund_type'];
+            $after_sale->refund_type = self::normalizeRefundTypeForOrderStatus($post['refund_type'], $order_status);
             $after_sale->refund_reason = trim($post['reason']);
             $after_sale->refund_remark = isset($post['remark']) ? trim($post['remark']) : '';
             $after_sale->refund_image = isset($post['img']) ? $post['img'] : '';
@@ -404,6 +405,15 @@ class AfterSaleLogic extends LogicBase
             return self::dataError($e->getMessage());
         }
 
+    }
+
+    public static function normalizeRefundTypeForOrderStatus($refund_type, $order_status)
+    {
+        if ((int)$order_status === Order::STATUS_WAIT_DELIVERY) {
+            return AfterSale::TYPE_ONLY_REFUND;
+        }
+
+        return (int)$refund_type;
     }
 
 

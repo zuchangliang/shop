@@ -12,7 +12,7 @@
 			</view>
 			<view class="content">
 				<view class="vip-swiper-container">
-					<swiper class="swiper" style="height: 320rpx" previous-margin="60rpx" next-margin="60rpx" display-multiple-items="1"
+					<swiper class="swiper" style="height: 320rpx" previous-margin="0" next-margin="0" display-multiple-items="1"
 					 :current="currentIndex" @change="bindchange">
 						<swiper-item v-for="(item, index) in levelList" :key="index">
 							<view class="vip-card-item" :style="'background-image: url(' + item.background_image + ');'">
@@ -26,20 +26,20 @@
 								</view>
 								<view class="row-between vip-name white">
 									<view class="bold">{{item.name}}</view>
-									<view class="sm">{{item.next_level}}</view>
+									<view v-if="item.next_level" class="sm">{{item.next_level}}</view>
 								</view>
 								<view class="row-center" v-if="item.diff_growth_percent">
 									<view class="vip-progress bg-white row">
 										<view class="vip-progress-bar" :style="'width: ' + (item.diff_growth_percent*100) + '%'"></view>
 									</view>
 								</view>
-								<view class="row-between mt20" style="padding: 0 30rpx">
-									<navigator hover-class="none" class="row">
-										<view class="sm white" style="line-height: 36rpx">
+								<view class="growth-row row-between mt20">
+									<navigator hover-class="none" class="growth-current row">
+										<view class="growth-current-text sm white">
 											{{item.current_level_status == 0 ? '当前高于该等级' : item.current_growth_tips}}
 										</view>
 									</navigator>
-									<view class="white">{{item.diff_growth_tips}}</view>
+									<view class="growth-diff white sm">{{item.diff_growth_tips}}</view>
 								</view>
 							</view>
 						</swiper-item>
@@ -50,7 +50,7 @@
 						<view class="line br60"></view>
 						<view class="xl ml20 bold">成长值规则</view>
 					</view>
-					<text class="rule-content column lighter ml20">
+					<text class="rule-content lighter">
 						{{growthRule}}
 					</text>
 				</view>
@@ -163,8 +163,10 @@
 
 				.vip-card-item {
 					height: 320rpx;
-					width: 600rpx;
+					width: 100%;
 					position: relative;
+					box-sizing: border-box;
+					overflow: hidden;
 					background-size: 100% 100%;
 
 					.grade {
@@ -182,6 +184,7 @@
 					}
 
 					.grade-icon {
+						flex: none;
 						width: 120rpx;
 						height: 100rpx;
 					}
@@ -192,16 +195,62 @@
 						text-align: center;
 						align-items: flex-end;
 						margin-bottom: 30rpx;
+
+						.bold {
+							flex: 1;
+							min-width: 0;
+							text-align: left;
+							overflow: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+						}
+
+						.sm {
+							flex: none;
+							max-width: 220rpx;
+							margin-left: 20rpx;
+							overflow: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+						}
 					}
 
 					.vip-progress {
 						height: 8rpx;
-						width: 540rpx;
+						width: calc(100% - 60rpx);
+						overflow: hidden;
 
 						.vip-progress-bar {
 							background-color: #f8d07c;
 							height: 100%;
 						}
+					}
+
+					.growth-row {
+						min-width: 0;
+						padding: 0 30rpx;
+					}
+
+					.growth-current {
+						flex: 1;
+						min-width: 0;
+					}
+
+					.growth-current-text {
+						line-height: 36rpx;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+
+					.growth-diff {
+						flex: none;
+						max-width: 220rpx;
+						margin-left: 20rpx;
+						text-align: right;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 					}
 
 				}
@@ -216,6 +265,14 @@
 							background-color: #f79c0c;
 						}
 					}
+
+					.rule-content {
+						display: block;
+						margin-top: 12rpx;
+						margin-left: 20rpx;
+						line-height: 40rpx;
+						white-space: pre-line;
+					}
 				}
 
 				.vip-rights {
@@ -229,6 +286,11 @@
 							height: 34rpx;
 							background-color: #f79c0c;
 						}
+					}
+
+					.rights-list {
+						flex-wrap: wrap;
+						align-items: flex-start;
 					}
 
 					.rights-item {

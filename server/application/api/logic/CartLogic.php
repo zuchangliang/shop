@@ -126,8 +126,10 @@ class CartLogic
     {
         $item_info = Db::name('goods_item')
             ->where('id', $item_id)->find();
+        $unit_count = isset($item_info['unit_count']) ? intval($item_info['unit_count']) : 1;
+        $unit_count = $unit_count > 0 ? $unit_count : 1;
 
-        if ($goods_num > $item_info['stock']) {
+        if (($goods_num * $unit_count) > $item_info['stock']) {
             return true;
         }
         return false;
@@ -137,7 +139,8 @@ class CartLogic
     public static function lists($user_id)
     {
         $field = 'g.name,g.image,g.id as goods_id,g.status as g_status,g.del as g_del,
-        i.spec_value_str,i.price,i.image as item_image,c.goods_num,c.selected,c.id as cart_id,c.item_id,i.stock as item_stock';
+        i.spec_value_str,i.price,i.unit_count,i.unit_price,i.unit_cost_price,i.image as item_image,
+        c.goods_num,c.selected,c.id as cart_id,c.item_id,i.stock as item_stock';
 
         $carts = Db::name('cart c')
             ->field($field)
@@ -155,13 +158,17 @@ class CartLogic
 
             $cart_img = empty($cart['item_image']) ? $cart['image'] : $cart['item_image'];
             $cart['img'] = UrlServer::getFileUrl($cart_img);
+            $cart['unit_count'] = isset($cart['unit_count']) ? intval($cart['unit_count']) : 1;
+            $cart['unit_count'] = $cart['unit_count'] > 0 ? $cart['unit_count'] : 1;
+            $cart['total_unit_num'] = intval($cart['goods_num']) * $cart['unit_count'];
+            $cart['max_buy_num'] = intval(floor(intval($cart['item_stock']) / $cart['unit_count']));
 
             $cart['cart_status'] = 0;
             if ($cart['g_status'] == 0) {
                 $cart['cart_status'] = 1;
             }
 
-            if ($cart['g_del'] == 1) {
+            if ($cart['g_del'] == 1 || $cart['max_buy_num'] <= 0 || intval($cart['goods_num']) > $cart['max_buy_num']) {
                 $cart['cart_status'] = 2;
             }
 

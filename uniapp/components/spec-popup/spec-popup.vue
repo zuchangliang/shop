@@ -42,7 +42,7 @@
             </view>
           </view>
           <view class="sm" v-show="showStock">
-            库存：{{ checkedGoods.stock }}件
+            可售：{{ maxBuyNum(checkedGoods) }}份 / 库存{{ checkedGoods.stock }}件
           </view>
           <view class="sm">
             <!-- <text>已选择：{{checkedGoods.spec_value_str}}，{{goodsNum}}件</text> -->
@@ -102,7 +102,7 @@
           <u-number-box
             v-model="goodsNum"
             :min="1"
-            :max="checkedGoods.stock"
+            :max="maxBuyNum(checkedGoods)"
             :disabled="disabledNumberBox"
           ></u-number-box>
         </view>
@@ -110,7 +110,7 @@
       <view
         class="btns row-between bg-white"
         :class="
-          specValueText.indexOf('请选择') != -1 || checkedGoods.stock == 0
+          specValueText.indexOf('请选择') != -1 || maxBuyNum(checkedGoods) == 0
             ? 'disabled'
             : ''
         "
@@ -222,8 +222,10 @@ export default {
         arr.forEach((item, index) => {
           if (item == "") spec_str += this.specList[index].name + ",";
         });
-      if (this.checkedGoods?.stock != 0 && spec_str == "")
-        return `已选择 ${this.checkedGoods.spec_value_str} ${this.goodsNum} 件`;
+      if (this.maxBuyNum(this.checkedGoods) != 0 && spec_str == "")
+        return this.unitCount(this.checkedGoods) > 1
+          ? `已选择 ${this.checkedGoods.spec_value_str} ${this.goodsNum}份，共${this.totalUnitNum()}件`
+          : `已选择 ${this.checkedGoods.spec_value_str} ${this.goodsNum} 件`;
       else return `请选择 ${spec_str.slice(0, spec_str.length - 1)}`;
     },
   },
@@ -232,13 +234,20 @@ export default {
     goods(value) {
       this.specList = value.goods_spec || [];
       let goodsItem = value.goods_item || [];
-      this.outOfStock = goodsItem.filter((item) => item.stock == 0);
+      goodsItem.forEach((item) => {
+        item.unit_count = this.unitCount(item);
+        item.max_buy_num = this.maxBuyNum(item);
+      });
+      this.outOfStock = goodsItem.filter((item) => this.maxBuyNum(item) == 0);
       // 找出库存不为0的
-      const resultArr = goodsItem.filter((item) => item.stock != 0);
+      const resultArr = goodsItem.filter((item) => this.maxBuyNum(item) != 0);
       if (resultArr.length != 0) {
         resultArr[0].spec_value_ids_arr =
           resultArr[0].spec_value_ids.split(",");
         this.checkedGoods = resultArr[0];
+        if (this.goodsNum > this.maxBuyNum(this.checkedGoods)) {
+          this.goodsNum = this.maxBuyNum(this.checkedGoods);
+        }
       } else {
         // 无法选择
         goodsItem[0].spec_value_ids_arr = [];
@@ -249,7 +258,7 @@ export default {
     },
 
     specList(value) {
-      if (this.checkedGoods.stock == 0) return;
+      if (this.maxBuyNum(this.checkedGoods) == 0) return;
 
       const res = this.goods.goods_item.filter((item) => {
         return this.checkedGoods.spec_value_ids === item.spec_value_ids;
@@ -268,8 +277,10 @@ export default {
 
         let result = JSON.parse(JSON.stringify(res[0]));
         result.spec_value_ids_arr = result.spec_value_ids.split(",");
-        if (this.goodsNum > result.stock) {
-          this.goodsNum = result.stock;
+        result.unit_count = this.unitCount(result);
+        result.max_buy_num = this.maxBuyNum(result);
+        if (this.goodsNum > result.max_buy_num) {
+          this.goodsNum = result.max_buy_num;
         }
         this.checkedGoods = result;
         // 同步到父组件
@@ -287,6 +298,22 @@ export default {
     console.log("spec");
   },
   methods: {
+    unitCount(goods = this.checkedGoods) {
+      const count = parseInt(goods?.unit_count || 1);
+      return count > 0 ? count : 1;
+    },
+
+    maxBuyNum(goods = this.checkedGoods) {
+      if (!goods) return 0;
+      const apiMax = parseInt(goods.max_buy_num);
+      if (!isNaN(apiMax)) return apiMax;
+      return Math.floor(parseInt(goods.stock || 0) / this.unitCount(goods));
+    },
+
+    totalUnitNum(goodsNum = this.goodsNum, goods = this.checkedGoods) {
+      return goodsNum * this.unitCount(goods);
+    },
+
     isDisable(e) {
       const res = this.disable.filter((item) => item == e);
       if (res.length != 0) return true;
@@ -303,11 +330,16 @@ export default {
         return this.$toast({
           title: this.specValueText,
         });
-      if (checkedGoods.stock == 0)
+      if (this.maxBuyNum(checkedGoods) == 0)
         return this.$toast({
           title: "当前选择库存不足",
         });
+      if (goodsNum > this.maxBuyNum(checkedGoods)) {
+        goodsNum = this.maxBuyNum(checkedGoods);
+        this.goodsNum = goodsNum;
+      }
       checkedGoods.goodsNum = goodsNum;
+      checkedGoods.total_unit_num = this.totalUnitNum(goodsNum, checkedGoods);
       this.$emit(type, {
         detail: checkedGoods,
       });

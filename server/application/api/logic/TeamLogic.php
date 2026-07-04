@@ -23,6 +23,7 @@ namespace app\api\logic;
 
 use app\common\logic\IntegralLogic;
 use app\common\logic\LogicBase;
+use app\common\logic\OrderGoodsLogic;
 use app\common\logic\PayNotifyLogic;
 use app\common\model\Client_;
 use app\common\model\Goods;
@@ -145,7 +146,7 @@ class TeamLogic extends LogicBase
 
         $field = 'i.id as item_id,g.id as goods_id,g.name as goods_name,g.status,g.del,g.image,i.stock,
         g.free_shipping_type,g.free_shipping,g.free_shipping_template_id,g.image, i.image as spec_image,
-        i.spec_value_str,i.spec_value_ids,i.price as item_price,i.image as spec_image,i.volume,
+        i.spec_value_str,i.spec_value_ids,i.price as item_price,i.unit_count,i.unit_price,i.unit_cost_price,i.image as spec_image,i.volume,
         i.weight,g.third_category_id,i.price as original_price,tg.team_id,tg.team_price as goods_price,g.is_express,g.is_selffetch';
 
         $goods = $team_goods->alias('tg')
@@ -198,6 +199,9 @@ class TeamLogic extends LogicBase
             self::setTeamFound($found_id);
             $goods = self::$team_goods;
             $goods['goods_num'] = self::$goods_num;
+            $goods['unit_count'] = isset($goods['unit_count']) ? intval($goods['unit_count']) : 1;
+            $goods['unit_count'] = $goods['unit_count'] > 0 ? $goods['unit_count'] : 1;
+            $goods['total_unit_num'] = OrderGoodsLogic::getStockChangeNum($goods);
             $goods_lists[] = $goods;
 
             $total_goods_price = self::$team_goods['goods_price'] * self::$goods_num;//商品总金额
@@ -478,14 +482,15 @@ class TeamLogic extends LogicBase
     public static function incTeamGoodsSale($order_id, $team_id)
     {
         $order_goods = Db::name('order_goods')->where(['order_id' => $order_id])->find();
+        $stock_change_num = OrderGoodsLogic::getStockChangeNum($order_goods);
 
         Db::name('team_activity')
             ->where(['goods_id' => $order_goods['goods_id'], 'team_id' => $team_id])
-            ->setInc('sales_sum', $order_goods['goods_num']);
+            ->setInc('sales_sum', $stock_change_num);
 
         Db::name('team_goods_item')
             ->where(['team_id' => $team_id, 'item_id' => $order_goods['item_id']])
-            ->setInc('sales_sum', $order_goods['goods_num']);
+            ->setInc('sales_sum', $stock_change_num);
     }
 
 

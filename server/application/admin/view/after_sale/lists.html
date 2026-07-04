@@ -152,7 +152,7 @@
                                         <span class="layui-col-md5">￥{{ item.goods_price }}</span>
                                         <br>
                                         <span class="layui-col-md7 goods_name_hide">{{ item.spec_value }}</span>
-                                        <span class="layui-col-md5">{{ item.goods_num }}件</span>
+                                        <span class="layui-col-md5">{{ item.goods_num_desc || (item.goods_num + '件') }}</span>
                                     </div>
                                 </div>
                                 {{#  }); }}

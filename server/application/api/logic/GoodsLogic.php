@@ -190,6 +190,13 @@ class GoodsLogic{
         }
         // 预估佣金
         $goods = $goods->toArray();
+        if (!empty($goods['goods_item'])) {
+            foreach ($goods['goods_item'] as &$item) {
+                $item['unit_count'] = isset($item['unit_count']) ? intval($item['unit_count']) : 1;
+                $item['unit_count'] = $item['unit_count'] > 0 ? $item['unit_count'] : 1;
+                $item['max_buy_num'] = intval(floor(intval($item['stock']) / $item['unit_count']));
+            }
+        }
         $goods['distribution'] = self::getDistribution($id, $user_id);
 
         // 钩子-记录足迹(浏览商品)

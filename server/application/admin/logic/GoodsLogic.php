@@ -258,12 +258,75 @@ class GoodsLogic
      * @param $spec_lists
      * @return bool
      */
+    public static function normalizeUnitPost(&$post, &$spec_lists = [])
+    {
+        if (isset($post['spec_type']) && $post['spec_type'] == 1) {
+            $unit_count = self::normalizeUnitCount($post['one_unit_count'] ?? 1);
+            $unit_price = self::normalizeUnitMoney($post['one_unit_price'] ?? 0, $post['one_price'] ?? 0, $unit_count);
+            $unit_cost_price = self::normalizeUnitMoney($post['one_unit_cost_price'] ?? 0, $post['one_cost_price'] ?? 0, $unit_count);
+
+            $post['one_unit_count'] = $unit_count;
+            $post['one_unit_price'] = self::formatMoney($unit_price);
+            $post['one_unit_cost_price'] = self::formatMoney($unit_cost_price);
+            $post['one_price'] = self::formatMoney($unit_price * $unit_count);
+            $post['one_cost_price'] = self::formatMoney($unit_cost_price * $unit_count);
+            return;
+        }
+
+        if (empty($spec_lists)) {
+            return;
+        }
+
+        foreach ($spec_lists as $key => $item) {
+            $unit_count = self::normalizeUnitCount($item['unit_count'] ?? 1);
+            $unit_price = self::normalizeUnitMoney($item['unit_price'] ?? 0, $item['price'] ?? 0, $unit_count);
+            $unit_cost_price = self::normalizeUnitMoney($item['unit_cost_price'] ?? 0, $item['cost_price'] ?? 0, $unit_count);
+
+            $spec_lists[$key]['unit_count'] = $unit_count;
+            $spec_lists[$key]['unit_price'] = self::formatMoney($unit_price);
+            $spec_lists[$key]['unit_cost_price'] = self::formatMoney($unit_cost_price);
+            $spec_lists[$key]['price'] = self::formatMoney($unit_price * $unit_count);
+            $spec_lists[$key]['cost_price'] = self::formatMoney($unit_cost_price * $unit_count);
+        }
+
+        foreach (['unit_count', 'unit_price', 'unit_cost_price', 'price', 'cost_price'] as $field) {
+            $post[$field] = array_column($spec_lists, $field);
+        }
+    }
+
+    private static function normalizeUnitCount($value)
+    {
+        $value = intval($value);
+        return $value > 0 ? $value : 1;
+    }
+
+    private static function normalizeUnitMoney($unit_value, $total_value, $unit_count)
+    {
+        $unit_value = floatval($unit_value);
+        if ($unit_value > 0) {
+            return $unit_value;
+        }
+
+        $total_value = floatval($total_value);
+        if ($total_value > 0 && $unit_count > 0) {
+            return round($total_value / $unit_count, 2);
+        }
+
+        return 0;
+    }
+
+    private static function formatMoney($value)
+    {
+        return sprintf('%.2f', round(floatval($value), 2));
+    }
+
     public static function add($post, $spec_lists)
     {
 
         try {
             Db::startTrans();
             $time = time();
+            self::normalizeUnitPost($post, $spec_lists);
 
             //算出最大最小价格
             if ($post['spec_type'] == 1) {
@@ -366,7 +429,10 @@ class GoodsLogic
                     'spec_value_str'    => '默认',
                     'market_price'      => $post['one_market_price'],
                     'price'             => $post['one_price'],
+                    'unit_count'        => $post['one_unit_count'],
+                    'unit_price'        => $post['one_unit_price'],
                     'cost_price'        => $post['one_cost_price'],
+                    'unit_cost_price'   => $post['one_unit_cost_price'],
                     'stock'             => $post['one_stock'],
                     'volume'            => $post['one_volume'],
                     'weight'            => $post['one_weight'],
@@ -452,6 +518,7 @@ class GoodsLogic
             $oldItemIds = GoodsItem::where('goods_id', $post['id'])->column('id');
             
             $time = time();
+            self::normalizeUnitPost($post, $spec_lists);
 
             //算出最大最小价格
             if ($post['spec_type'] == 1) {
@@ -567,7 +634,10 @@ class GoodsLogic
                         'price'             => $post['one_price'],
                         'market_price'      => $post['one_market_price'],
                         'price'             => $post['one_price'],
+                        'unit_count'        => $post['one_unit_count'],
+                        'unit_price'        => $post['one_unit_price'],
                         'cost_price'        => $post['one_cost_price'],
+                        'unit_cost_price'   => $post['one_unit_cost_price'],
                         'stock'             => $post['one_stock'],
                         'volume'            => $post['one_volume'],
                         'weight'            => $post['one_weight'],
@@ -599,7 +669,10 @@ class GoodsLogic
                         'spec_value_str'    => '默认',
                         'market_price'      => $post['one_market_price'],
                         'cost_price'        => $post['one_cost_price'],
+                        'unit_cost_price'   => $post['one_unit_cost_price'],
                         'price'             => $post['one_price'],
+                        'unit_count'        => $post['one_unit_count'],
+                        'unit_price'        => $post['one_unit_price'],
                         'stock'             => $post['one_stock'],
                         'volume'            => $post['one_volume'],
                         'weight'            => $post['one_weight'],

@@ -73,7 +73,12 @@
                                 </view>
                             </view>
                         </view>
-                        <view class="goods-num sm">x{{ item.goods_num }}</view>
+                        <view class="goods-num sm">
+                            <template v-if="unitCount(item) > 1">
+                                x{{ item.goods_num }}份 / 共{{ totalUnitNum(item) }}件
+                            </template>
+                            <template v-else>x{{ item.goods_num }}</template>
+                        </view>
                     </view>
                 </view>
             </view>
@@ -152,6 +157,17 @@ export default {
     },
 
     methods: {
+        unitCount(item) {
+            const count = parseInt(item.unit_count || 1)
+            return count > 0 ? count : 1
+        },
+
+        totalUnitNum(item) {
+            const total = parseInt(item.total_unit_num)
+            if (!isNaN(total) && total > 0) return total
+            return parseInt(item.goods_num || 0) * this.unitCount(item)
+        },
+
         toGoods(id) {
             if (!this.link) return
             uni.navigateTo({

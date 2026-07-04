@@ -56,6 +56,9 @@
               <view class="muted xs line1 mt10">
                 {{ item.spec_value_str }}
               </view>
+              <view class="muted xs mt10" v-if="unitCount(item) > 1">
+                x{{ item.goods_num }}份 / 共{{ totalUnitNum(item) }}件
+              </view>
               <view class="row-between mt20">
                 <view class="price row primary">
                   <price-format
@@ -71,7 +74,7 @@
                     :disabled="item.cart_status != 0"
                     :value="item.goods_num"
                     :min="1"
-                    :max="item.item_stock"
+                    :max="maxBuyNum(item)"
                     @change="countChange($event, item.cart_id, item)"
                   />
                 </view>
@@ -206,6 +209,23 @@ export default {
   // },
   methods: {
     ...mapActions(["getCartNum"]),
+    unitCount(item) {
+      const count = parseInt(item.unit_count || 1);
+      return count > 0 ? count : 1;
+    },
+
+    maxBuyNum(item) {
+      const max = parseInt(item.max_buy_num);
+      if (!isNaN(max)) return max;
+      return Math.floor(parseInt(item.item_stock || 0) / this.unitCount(item));
+    },
+
+    totalUnitNum(item) {
+      const total = parseInt(item.total_unit_num);
+      if (!isNaN(total) && total > 0) return total;
+      return parseInt(item.goods_num || 0) * this.unitCount(item);
+    },
+
     goodsDelete() {
       this.delPopup = false;
       deleteGoods({

@@ -52,7 +52,7 @@ class FreightLogic
         foreach ($goods as $good){
             //统一邮费
             if ($good['free_shipping_type'] == 2){
-                $shipping_price += round($good['free_shipping'] * $good['goods_num'], 2);
+                $shipping_price += round($good['free_shipping'] * self::getActualGoodsNum($good), 2);
             }
 
             //指定运费模板
@@ -70,12 +70,30 @@ class FreightLogic
             foreach ($template_goods as $template_good) {
                 $temp['total_volume'] += $template_good['volume'] * $template_good['goods_num'];
                 $temp['total_weight'] += $template_good['weight'] * $template_good['goods_num'];
-                $temp['goods_num'] += $template_good['goods_num'];
+                $temp['goods_num'] += self::getActualGoodsNum($template_good);
             }
             $shipping_price += self::calculate($temp, $user_address);
         }
 
         return $shipping_price < 0 ? 0 : $shipping_price;
+    }
+
+    /**
+     * Desc: 获取运费计件数量，购买份数 * 规格内含件数
+     * @param $good
+     * @return int
+     */
+    public static function getActualGoodsNum($good)
+    {
+        if (isset($good['total_unit_num']) && intval($good['total_unit_num']) > 0) {
+            return intval($good['total_unit_num']);
+        }
+
+        $goods_num = isset($good['goods_num']) ? intval($good['goods_num']) : 0;
+        $unit_count = isset($good['unit_count']) ? intval($good['unit_count']) : 1;
+        $unit_count = $unit_count > 0 ? $unit_count : 1;
+
+        return $goods_num * $unit_count;
     }
 
 

@@ -36,6 +36,34 @@ use think\facade\Hook;
  */
 class OrderGoodsLogic
 {
+    //获取库存/销量变动数量：购买份数 * 规格内含件数
+    public static function getStockChangeNum($good)
+    {
+        if (isset($good['total_unit_num']) && intval($good['total_unit_num']) > 0) {
+            return intval($good['total_unit_num']);
+        }
+
+        $goods_num = isset($good['goods_num']) ? intval($good['goods_num']) : 0;
+        $unit_count = isset($good['unit_count']) ? intval($good['unit_count']) : 1;
+        $unit_count = $unit_count > 0 ? $unit_count : 1;
+
+        return $goods_num * $unit_count;
+    }
+
+    //展示订单数量：多件装显示购买份数和真实件数
+    public static function getGoodsNumDesc($good)
+    {
+        $goods_num = isset($good['goods_num']) ? intval($good['goods_num']) : 0;
+        $unit_count = isset($good['unit_count']) ? intval($good['unit_count']) : 1;
+        $unit_count = $unit_count > 0 ? $unit_count : 1;
+
+        if ($unit_count > 1) {
+            return $goods_num . '份/' . self::getStockChangeNum($good) . '件';
+        }
+
+        return $goods_num . '件';
+    }
+
     //返回订单库存,销量
     public static function backStock($order_goods, $pay_status)
     {
@@ -46,18 +74,19 @@ class OrderGoodsLogic
         }
 
         foreach ($order_goods as $good) {
+            $stock_change_num = self::getStockChangeNum($good);
             //回退库存,回退规格库存,减少商品销量
             Db::name('goods')
                 ->where('id', $good['goods_id'])
                 ->update([
 //                    'sales_sum' => Db::raw("sales_sum-" . $good['goods_num']),
-                    'stock' => Db::raw('stock+' . $good['goods_num'])
+                    'stock' => Db::raw('stock+' . $stock_change_num)
                 ]);
 
             //补充规格表库存
             Db::name('goods_item')
                 ->where('id', $good['item_id'])
-                ->setInc('stock', $good['goods_num']);
+                ->setInc('stock', $stock_change_num);
         }
     }
 
@@ -73,18 +102,19 @@ class OrderGoodsLogic
 
         foreach ($goods as $k1 => $good) {
             $item_id = $good['item_id'];
+            $stock_change_num = self::getStockChangeNum($good);
             //扣除库存,扣除规格库存,增加商品销量
             Db::name('goods')
                 ->where('id', $good['goods_id'])
                 ->update([
-                    'sales_sum' => Db::raw("sales_sum+" . $good['goods_num']),
-                    'stock' => Db::raw('stock-' . $good['goods_num'])
+                    'sales_sum' => Db::raw("sales_sum+" . $stock_change_num),
+                    'stock' => Db::raw('stock-' . $stock_change_num)
                 ]);
 
             //扣除规格表库存
             Db::name('goods_item')
                 ->where('id', $item_id)
-                ->setDec('stock', $good['goods_num']);
+                ->setDec('stock', $stock_change_num);
 
             //秒杀商品增加销量
             if (isset($seckill_goods[$item_id])){
@@ -92,7 +122,7 @@ class OrderGoodsLogic
                 Db::name('seckill_goods')
                     ->where('id', $seckill_goods_id)
                     ->update([
-                        'sales_sum' => Db::raw("sales_sum+" . $good['goods_num']),
+                        'sales_sum' => Db::raw("sales_sum+" . $stock_change_num),
                         'update_time' => time()
                     ]);
             }

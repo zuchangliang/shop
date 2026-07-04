@@ -77,7 +77,9 @@ class Team extends Validate
         }
 
         //商品库存是否足够
-        if ($data['goods_num'] > $team_goods['stock']){
+        $unit_count = isset($team_goods['unit_count']) ? intval($team_goods['unit_count']) : 1;
+        $unit_count = $unit_count > 0 ? $unit_count : 1;
+        if (($data['goods_num'] * $unit_count) > $team_goods['stock']){
             return '库存不足';
         }
 

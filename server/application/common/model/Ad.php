@@ -45,7 +45,7 @@ class Ad extends Model{
                 ],
                 [
                     'name'      => '领券中心',
-                    'path'      => '/pages/user_getcoupon/user_getcoupon',
+                    'path'      => '/bundle_user/pages/user_getcoupon/user_getcoupon',
                     'is_tab'    => 0,
                 ],
                 [
@@ -55,47 +55,47 @@ class Ad extends Model{
                 ],
                 [
                     'name'      => '积分签到',
-                    'path'      => '/bundle/pages/user_sign/user_sign',
+                    'path'      => '/bundle_activity/pages/user_sign/user_sign',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '会员中心',
-                    'path'      => '/pages/user_vip/user_vip',
+                    'path'      => '/bundle_user/pages/user_vip/user_vip',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '积分抽奖',
-                    'path'      => '/bundle/pages/luckly_wheel/luckly_wheel',
+                    'path'      => '/bundle_activity/pages/luckly_wheel/luckly_wheel',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '限时秒杀',
-                    'path'      => '/bundle/pages/goods_seckill/goods_seckill',
+                    'path'      => '/bundle_activity/pages/goods_seckill/goods_seckill',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '拼团活动',
-                    'path'      => '/bundle/pages/goods_combination/goods_combination',
+                    'path'      => '/bundle_activity/pages/goods_combination/goods_combination',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '砍价活动',
-                    'path'      => '/bundle/pages/bargain/bargain',
+                    'path'      => '/bundle_activity/pages/bargain/bargain',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '热销榜单',
-                    'path'      => '/bundle/pages/hot_list/hot_list',
+                    'path'      => '/bundle_activity/pages/hot_list/hot_list',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '商城资讯',
-                    'path'      => '/pages/news_list/news_list',
+                    'path'      => '/bundle_activity/pages/news_list/news_list',
                     'is_tab'    => 0,
                 ],
                 [
                     'name'      => '帮助中心',
-                    'path'      => '/pages/news_list/news_list?type=1',
+                    'path'      => '/bundle_activity/pages/news_list/news_list?type=1',
                     'is_tab'    => 0,
                 ],
             ],
@@ -159,7 +159,7 @@ class Ad extends Model{
 
     public static function getGoodsPath($from = true){
         $desc = [
-            self::mobile    => '/pages/goods_details/goods_details',
+            self::mobile    => '/bundle_activity/pages/goods_details/goods_details',
             self::pc        => '/goods_details',
         ];
         if(true === $from){

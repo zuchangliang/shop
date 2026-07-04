@@ -21,6 +21,7 @@ use app\api\model\{
     Order,Goods,GoodsItem
 };
 use app\common\logic\AccountLogLogic;
+use app\common\logic\OrderGoodsLogic;
 use app\common\model\AccountLog;
 use app\common\model\Pay;
 use app\common\server\ConfigServer;
@@ -83,13 +84,14 @@ class OrderClose extends Command{
             //更新库存
             if($deduct_type){
                 foreach ($order['order_goods'] as $order_goods){
+                    $stock_change_num = OrderGoodsLogic::getStockChangeNum($order_goods);
 
                     //更新商品总库存数据
                     if(isset($update_total_stock[$order_goods['goods_id']])){
-                        $total_stock_num[$order_goods['goods_id']] = $total_stock_num[$order_goods['goods_id']] + $order_goods['goods_num'];
+                        $total_stock_num[$order_goods['goods_id']] = $total_stock_num[$order_goods['goods_id']] + $stock_change_num;
                         $update_total_stock[$order_goods['goods_id']]['stock'] = Db::raw('stock+'.$total_stock_num[$order_goods['goods_id']]);
                     }else{
-                        $total_stock_num[$order_goods['goods_id']] = $order_goods['goods_num'];
+                        $total_stock_num[$order_goods['goods_id']] = $stock_change_num;
                         $update_total_stock[$order_goods['goods_id']] = [
                             'id'        => $order_goods['goods_id'],
                             'stock'     => Db::raw('stock+'.$total_stock_num[$order_goods['goods_id']])
@@ -97,10 +99,10 @@ class OrderClose extends Command{
                     }
                     //更新商品规格库存数据
                     if(isset($update_stock[$order_goods['item_id']])){
-                        $stock_num[$order_goods['item_id']] = $stock_num[$order_goods['item_id']] + $order_goods['goods_num'];
+                        $stock_num[$order_goods['item_id']] = $stock_num[$order_goods['item_id']] + $stock_change_num;
                         $update_stock[$order_goods['item_id']]['stock'] = Db::raw('stock+'.$stock_num[$order_goods['item_id']]);
                     }else{
-                        $stock_num[$order_goods['item_id']] = $order_goods['goods_num'];
+                        $stock_num[$order_goods['item_id']] = $stock_change_num;
                         $update_stock[$order_goods['item_id']] = [
                             'id'        => $order_goods['item_id'],
                             'stock'     => Db::raw('stock+'.$stock_num[$order_goods['item_id']])

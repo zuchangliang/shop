@@ -179,7 +179,7 @@ class NoticeSetting extends Model
         $url = '/mobile/pages/index/index'; // 公众号主页路径
         if (in_array($scene, self::ORDER_SCENE)) {
             $url = '/mobile/pages/order_details/order_details?id='.$extra_id;
-            $page = '/pages/order_details/order_details?id='.$extra_id;
+            $page = '/bundle_order/pages/order_details/order_details?id='.$extra_id;
         }
         return ['url' => $url, 'page' => $page];
     }

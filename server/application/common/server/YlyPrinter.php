@@ -19,6 +19,7 @@
 namespace app\common\server;
 use App\Api\PrinterService;
 use App\Api\PrintService;
+use app\common\logic\OrderGoodsLogic;
 use app\common\model\Order;
 use App\Oauth\YlyOauthClient;
 use App\Config\YlyConfig;
@@ -175,7 +176,7 @@ class YlyPrinter{
 
                 foreach ($order['order_goods'] as $goods){
                     $content .= $goods['name'].PHP_EOL;
-                    $content .= $goods['spec_value_str']."   "."x".$goods['goods_num']."  ".$goods['goods_price'].PHP_EOL;
+                    $content .= $goods['spec_value_str']."   "."x".OrderGoodsLogic::getGoodsNumDesc($goods)."  ".$goods['goods_price'].PHP_EOL;
                     $content .= PHP_EOL;
                 }
 
@@ -206,4 +207,3 @@ class YlyPrinter{
     }
 
 }
-

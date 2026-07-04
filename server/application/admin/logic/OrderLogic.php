@@ -20,6 +20,7 @@
 namespace app\admin\logic;
 
 use app\common\logic\OrderRefundLogic;
+use app\common\logic\OrderGoodsLogic;
 use app\common\model\MessageScene_;
 use app\common\model\NoticeSetting;
 use app\common\model\Order;
@@ -163,6 +164,7 @@ class OrderLogic
                 $order_good_info = json_decode($order_goods['goods_info'], true);
                 $order_goods['goods_name'] = $order_good_info['goods_name'];
                 $order_goods['spec_value'] = $order_good_info['spec_value_str'];
+                $order_goods['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($order_goods);
                 $order_goods['image'] =  empty($order_good_info['spec_image']) ?
                     UrlServer::getFileUrl($order_good_info['image']) : UrlServer::getFileUrl($order_good_info['spec_image']);
             }
@@ -308,7 +310,7 @@ class OrderLogic
             $goodsStr = '';
             foreach($item['order_goods'] as $subItem) {
                 $goodsInfo = json_decode($subItem['goods_info'], true);
-                $goodsStr.= '【'.$goodsInfo['goods_name'].' 规格:'.$goodsInfo['spec_value_str']. ' 数量:'.$subItem['goods_num']. '】';
+                $goodsStr.= '【'.$goodsInfo['goods_name'].' 规格:'.$goodsInfo['spec_value_str']. ' 数量:'.OrderGoodsLogic::getGoodsNumDesc($subItem). '】';
             }
             $goodsCode = self::formatExportGoodsCodes($item['order_goods'], $goodsCodeMap);
             $exportData[] = [$orderSn, $item['order_type_text'], $item['create_time'], $item['pay_time'], $item['order_source_text'], $item['user_sn'], $item['user_nickname'], $level, $goodsStr, $goodsCode, $item['total_num'], $item['shipping_price'], $item['goods_price'], $item['discount_amount'], $item['order_amount'], $item['pay_way_text'], $item['consignee'], $item['mobile'], $item['delivery_address'],$deliveryType, $item['pay_status_text'], $item['order_status_text']];
@@ -337,8 +339,9 @@ class OrderLogic
             $info = json_decode($order_goods['goods_info'], true);
             $order_goods['goods_name'] = $info['goods_name'];
             $order_goods['spec_value'] = $info['spec_value_str'];
+            $order_goods['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($order_goods);
             $order_goods['goods_image'] = empty($info['spec_image']) ?
-                            UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
+                UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
 
             $order_goods['refund_status_desc'] = OrderGoods::getRefundStatus($order_goods['refund_status']);
         }
@@ -725,6 +728,7 @@ class OrderLogic
             $info = json_decode($order_goods['goods_info'], true);
             $order_goods['name'] = $info['goods_name'];
             $order_goods['spec_value_str'] = $info['spec_value_str'];
+            $order_goods['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($order_goods);
             $order_goods['goods_image'] = empty($info['spec_image']) ? $info['image'] : $info['spec_image'];
         }
         return $result->toArray();

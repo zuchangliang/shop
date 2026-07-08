@@ -128,9 +128,10 @@ class IndexLogic{
 
         // 湘左记首页定制广告位
         $xzj_ads = [
-            'hot'     => AdLogic::lists(15, 1),
-            'combo'   => AdLogic::lists(23, 1),
-            'seckill' => AdLogic::lists(14, 1),
+            'background' => AdLogic::lists(24, 1),
+            'hot'        => AdLogic::lists(15, 1),
+            'combo'      => AdLogic::lists(23, 1),
+            'seckill'    => AdLogic::lists(14, 1),
         ];
 
 

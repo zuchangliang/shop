@@ -5,7 +5,7 @@
         <!-- #endif -->
         <bubble-tips top="50rpx" :discharge="isDischarge"></bubble-tips>
 
-        <view class="xzj-hero">
+        <view class="xzj-hero" :style="homeBackgroundStyle">
             <navigator
                 class="xzj-search"
                 hover-class="none"
@@ -13,7 +13,7 @@
             ></navigator>
         </view>
 
-        <view class="xzj-content">
+        <view class="xzj-content" :style="homeBackgroundStyle">
             <view class="xzj-feature-grid">
                 <view class="xzj-panel xzj-hot-panel">
                     <view class="xzj-ad-title">{{ hotAdName }}</view>
@@ -259,6 +259,7 @@ export default {
             hotBanners: [],
             comboBanners: [],
             seckillBanners: [],
+            homeBgImage: '',
             showCoupop: false,
             couponPopList: [],
             coupon: [],
@@ -519,6 +520,8 @@ export default {
 
         applyHomeImageAdsFromHome(xzjAds = {}) {
             if (!xzjAds || typeof xzjAds !== 'object') return
+            const background = Array.isArray(xzjAds.background) ? xzjAds.background[0] : null
+            this.homeBgImage = background && background.image ? background.image : ''
             this.hotBanners = Array.isArray(xzjAds.hot) ? xzjAds.hot : []
             this.comboBanners = Array.isArray(xzjAds.combo) ? xzjAds.combo : []
             this.seckillBanners = Array.isArray(xzjAds.seckill) ? xzjAds.seckill : []
@@ -711,6 +714,12 @@ export default {
         },
         seckillBannerList() {
             return this.seckillBanners
+        },
+        homeBackgroundStyle() {
+            if (!this.homeBgImage) return {}
+            return {
+                backgroundImage: `url("${this.homeBgImage}")`
+            }
         }
     }
 }

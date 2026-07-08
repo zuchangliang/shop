@@ -10,9 +10,6 @@ export default {
     navHeight: "",
   },
   onLaunch: async function (options) {
-    uni.hideTabBar({
-      animation: false,
-    });
     // 获取配置
     this.getConfigFun();
 
@@ -90,4 +87,9 @@ export default {
 @import "styles/base.scss";
 /*每个页面公共css */
 @import "components/uview-ui/index.scss";
+
+body.xzj-home-page uni-tabbar,
+body.xzj-home-page uni-tabbar .uni-tabbar {
+  display: none !important;
+}
 </style>

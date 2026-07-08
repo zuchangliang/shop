@@ -22,6 +22,9 @@ function checkParams(params) {
 const service = axios.create({
   baseURL: `${baseURL}/api/`,
   timeout: 10000,
+  headers: {
+    "content-type": "application/json",
+  },
   header: {
     "content-type": "application/json",
   },
@@ -30,6 +33,8 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   (config) => {
+    config.header = config.header || config.headers || {};
+    config.headers = config.headers || config.header;
     config.data = checkParams(config.data);
     config.params = checkParams(config.params);
     if (config.method == "GET") {

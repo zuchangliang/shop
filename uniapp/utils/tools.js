@@ -137,10 +137,34 @@ export async function loadingFun(fun, page, dataList = [], status, params) {
 
 export function getRect(selector, all, context) {
   return new Promise(function (resolve) {
-    let qurey = uni.createSelectorQuery();
+    if (typeof document !== "undefined") {
+      const nodes = all
+        ? Array.from(document.querySelectorAll(selector))
+        : [document.querySelector(selector)].filter(Boolean);
+      const rects = nodes.map((node) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        };
+      });
+      resolve(all ? rects : rects[0] || null);
+      return;
+    }
+
+    let qurey = uni.createSelectorQuery && uni.createSelectorQuery();
 
     if (context) {
-      qurey = uni.createSelectorQuery().in(context);
+      qurey = uni.createSelectorQuery && uni.createSelectorQuery().in(context);
+    }
+
+    if (!qurey || !qurey[all ? "selectAll" : "select"]) {
+      resolve(all ? [] : null);
+      return;
     }
 
     qurey[all ? "selectAll" : "select"](selector)

@@ -126,6 +126,13 @@ class IndexLogic{
                     ->limit(5)
                     ->select();
 
+        // 湘左记首页定制广告位
+        $xzj_ads = [
+            'hot'     => AdLogic::lists(15, 1),
+            'combo'   => AdLogic::lists(23, 1),
+            'seckill' => AdLogic::lists(14, 1),
+        ];
+
 
         $list = [
             'news'          => $news,
@@ -135,7 +142,8 @@ class IndexLogic{
             'seckill'       => $seckill,
             'host_goods'    => $host_goods,
             'new_goods'     => $new_goods,
-            'mall_logo'     => $mall_logo
+            'mall_logo'     => $mall_logo,
+            'xzj_ads'       => $xzj_ads
         ];
         return $list;
     }

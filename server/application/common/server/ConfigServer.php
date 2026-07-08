@@ -93,9 +93,11 @@ class ConfigServer
                 ->value('value');
 
             //数组配置需要自动转换
-            $json = json_decode($value, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $value = $json;
+            if (is_string($value)) {
+                $json = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $value = $json;
+                }
             }
             //获取调用默认配置
             if ($value === NULL) {
@@ -116,9 +118,11 @@ class ConfigServer
         //数组配置需要自动转换
         if (is_array($data)) {
             foreach ($data as $k => $v) {
-                $json = json_decode($v, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    $data[$k] = $json;
+                if (is_string($v)) {
+                    $json = json_decode($v, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $data[$k] = $json;
+                    }
                 }
             }
         }

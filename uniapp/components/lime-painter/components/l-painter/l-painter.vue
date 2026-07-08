@@ -511,7 +511,7 @@ export default {
 	}
 };
 </script>
-<style>
+<style lang="scss">
 	.lime-painter, .lime-painter__canvas {
 		// #ifndef APP-NVUE
 		width: 100%;

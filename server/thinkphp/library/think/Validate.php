@@ -1071,7 +1071,13 @@ class Validate
             $param = null;
         }
 
-        return false !== filter_var($value, is_int($rule) ? $rule : filter_id($rule), $param);
+        $filter = is_int($rule) ? $rule : filter_id($rule);
+
+        if (null === $param) {
+            return false !== filter_var($value, $filter);
+        }
+
+        return false !== filter_var($value, $filter, $param);
     }
 
     /**

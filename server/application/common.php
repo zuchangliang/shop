@@ -413,7 +413,7 @@ function create_user_sn($prefix = '', $length = 8)
 /*
  * 生成海报自动适应标题
  */
-function auto_adapt($size, $angle = 0, $fontfile, $string, $width, $height, $bg_height)
+function auto_adapt($size, $angle, $fontfile, $string, $width, $height, $bg_height)
 {
     $content = "";
     // 将字符串拆分成一个个单字 保存到数组 letter 中
@@ -1072,6 +1072,5 @@ function check_is_video($video) : bool
 
     return strpos($type, 'video') !== false;
 }
-
 
 

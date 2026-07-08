@@ -93,7 +93,7 @@
                             , icon: 1
                             , time: 1000
                         }, function () {
-                            location.href = '../'; //后台主页
+                            location.href = '{:url("index/index")}'; //后台主页
                         });
                     }
                     $('#captcha').attr('src', '{:captcha_src()}?t=' + new Date().getTime());

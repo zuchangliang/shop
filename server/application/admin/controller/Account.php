@@ -45,7 +45,7 @@ class Account extends AdminBase
             }
             $this->_error($result);
         }
-        $this->assign('account', cookie('account'));
+        $this->assign('account', cookie('account') ?: '');
 
         //首页配置
         $this->assign('config', LoginLogic::config());

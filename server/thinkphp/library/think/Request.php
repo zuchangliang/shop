@@ -597,15 +597,19 @@ class Request
         if (!$this->baseFile) {
             $url = '';
             if (!$this->isCli()) {
-                $script_name = basename($this->server('SCRIPT_FILENAME'));
-                if (basename($this->server('SCRIPT_NAME')) === $script_name) {
-                    $url = $this->server('SCRIPT_NAME');
-                } elseif (basename($this->server('PHP_SELF')) === $script_name) {
-                    $url = $this->server('PHP_SELF');
-                } elseif (basename($this->server('ORIG_SCRIPT_NAME')) === $script_name) {
-                    $url = $this->server('ORIG_SCRIPT_NAME');
-                } elseif (($pos = strpos($this->server('PHP_SELF'), '/' . $script_name)) !== false) {
-                    $url = substr($this->server('SCRIPT_NAME'), 0, $pos) . '/' . $script_name;
+                $script_filename = $this->server('SCRIPT_FILENAME') ?: '';
+                $script_name      = basename($script_filename);
+                $server_script    = $this->server('SCRIPT_NAME') ?: '';
+                $php_self         = $this->server('PHP_SELF') ?: '';
+                $orig_script      = $this->server('ORIG_SCRIPT_NAME') ?: '';
+                if (basename($server_script) === $script_name) {
+                    $url = $server_script;
+                } elseif (basename($php_self) === $script_name) {
+                    $url = $php_self;
+                } elseif ($orig_script && basename($orig_script) === $script_name) {
+                    $url = $orig_script;
+                } elseif (($pos = strpos($php_self, '/' . $script_name)) !== false) {
+                    $url = substr($server_script, 0, $pos) . '/' . $script_name;
                 } elseif ($this->server('DOCUMENT_ROOT') && strpos($this->server('SCRIPT_FILENAME'), $this->server('DOCUMENT_ROOT')) === 0) {
                     $url = str_replace('\\', '/', str_replace($this->server('DOCUMENT_ROOT'), '', $this->server('SCRIPT_FILENAME')));
                 }
@@ -1654,7 +1658,7 @@ class Request
      */
     public function isAjax($ajax = false)
     {
-        $value  = $this->server('HTTP_X_REQUESTED_WITH');
+        $value  = $this->server('HTTP_X_REQUESTED_WITH') ?: '';
         $result = 'xmlhttprequest' == strtolower($value) ? true : false;
 
         if (true === $ajax) {
@@ -1800,7 +1804,7 @@ class Request
     public function host($strict = false)
     {
         if (!$this->host) {
-            $this->host = $this->server('HTTP_X_REAL_HOST') ?: $this->server('HTTP_X_FORWARDED_HOST') ?: $this->server('HTTP_HOST');
+            $this->host = $this->server('HTTP_X_REAL_HOST') ?: $this->server('HTTP_X_FORWARDED_HOST') ?: $this->server('HTTP_HOST') ?: '';
         }
 
         return true === $strict && strpos($this->host, ':') ? strstr($this->host, ':', true) : $this->host;

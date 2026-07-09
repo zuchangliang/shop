@@ -219,10 +219,7 @@ class OrderLogic extends LogicBase
     public static function goodsTemolate($infos, $item_id, $goods_num, $seckill_goods, $level, $post)
     {
         $goods_info = $infos[$item_id];
-        $goods_info['goods_num'] = intval($goods_num);
-        $goods_info['unit_count'] = isset($goods_info['unit_count']) ? intval($goods_info['unit_count']) : 1;
-        $goods_info['unit_count'] = $goods_info['unit_count'] > 0 ? $goods_info['unit_count'] : 1;
-        $goods_info['total_unit_num'] = $goods_info['goods_num'] * $goods_info['unit_count'];
+        $goods_info['goods_num'] = $goods_num;
         $image_str = empty($goods_info['spec_image']) ? $goods_info['image'] : $goods_info['spec_image'];
         $goods_info['image_str'] = UrlServer::getFileUrl($image_str);
         $goods_info['is_seckill'] = 0;
@@ -490,7 +487,7 @@ class OrderLogic extends LogicBase
         $field = 'i.id as item_id,g.id as goods_id,g.name as goods_name,g.code,g.status,g.del,g.image,
         g.is_integral,g.is_member,g.give_integral_type,g.give_integral,g.free_shipping_type,
         g.free_shipping,g.free_shipping_template_id,i.image as spec_image,
-        i.spec_value_str,i.spec_value_ids,i.price as goods_price,i.unit_count,i.unit_price,i.unit_cost_price,i.volume,i.stock,
+        i.spec_value_str,i.spec_value_ids,i.price as goods_price,i.volume,i.stock,
         i.weight,g.first_category_id,g.second_category_id,g.third_category_id,g.is_express,g.is_selffetch';
 
         $goods = Db::name('goods g')
@@ -751,8 +748,7 @@ class OrderLogic extends LogicBase
             if ($good['del'] == 1 || $good['status'] != 1) {
                 throw new Exception( '包含不存在或已下架的商品,无法下单');
             }
-            $stock_change_num = OrderGoodsLogic::getStockChangeNum($good);
-            if ($stock_change_num > $good['stock']) {
+            if ($good['goods_num'] > $good['stock']) {
                 throw new Exception('商品库存不足,无法下单');
             }
 
@@ -765,8 +761,6 @@ class OrderLogic extends LogicBase
                 'item_id'           => $good['item_id'],
                 'goods_name'        => $good['goods_name'],
                 'goods_num'         => $good['goods_num'],
-                'unit_count'        => $good['unit_count'] ?? 1,
-                'total_unit_num'    => $stock_change_num,
                 'goods_price'       => $good['goods_price'],//商品价格单价(未扣减优惠和积分价格)
                 'total_price'       => $good['goods_price'] * $good['goods_num'],
                 'total_pay_price'   => $total_pay_price,//实际支付商品金额(扣除优惠金额)

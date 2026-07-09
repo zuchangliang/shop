@@ -21,7 +21,6 @@ namespace app\admin\logic;
 
 use app\api\logic\DistributionLogic;
 use app\common\logic\AccountLogLogic;
-use app\common\logic\OrderGoodsLogic;
 use app\common\logic\OrderRefundLogic;
 use app\common\server\AreaServer;
 use app\common\server\ConfigServer;
@@ -136,7 +135,6 @@ class AfterSaleLogic
                 $info = json_decode($good['goods_info'], true);
                 $lists[$key]['order_goods'][$ko]['goods_name'] = $info['goods_name'];
                 $lists[$key]['order_goods'][$ko]['spec_value'] = $info['spec_value_str'];
-                $lists[$key]['order_goods'][$ko]['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($good);
                 $lists[$key]['order_goods'][$ko]['image'] = empty($info['spec_image']) ?
                     UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
             }
@@ -170,7 +168,6 @@ class AfterSaleLogic
             $info = json_decode($good['goods_info'], true);
             $good['goods_name'] = $info['goods_name'];
             $good['spec_value'] = $info['spec_value_str'];
-            $good['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($good);
             $good['image'] = empty($info['spec_image']) ?
                 UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
         }
@@ -179,7 +176,6 @@ class AfterSaleLogic
             $info = json_decode($good['goods_info'], true);
             $good['goods_name'] = $info['goods_name'];
             $good['spec_value'] = $info['spec_value_str'];
-            $good['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($good);
             $good['image'] = empty($info['spec_image']) ?
                 UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
         }

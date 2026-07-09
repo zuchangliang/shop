@@ -93,8 +93,6 @@ class Goods extends AdminBase
 
             //单规格验证
             if ($post['spec_type'] == 1) {
-                $empty_spec_lists = [];
-                GoodsLogic::normalizeUnitPost($post, $empty_spec_lists);
                 $result = $this->validate($post, 'app\admin\validate\GoodsOneSpec');
                 if ($result !== true) {
                     $this->_error($result);
@@ -122,7 +120,6 @@ class Goods extends AdminBase
                 unset($spec_lists['spec_id']);
                 unset($spec_lists['spec_value_ids']);
                 $spec_lists = form_to_linear($spec_lists);
-                GoodsLogic::normalizeUnitPost($post, $spec_lists);
 
                 //规格验证
                 if (empty($spec_lists)) {
@@ -189,8 +186,6 @@ class Goods extends AdminBase
 
             //单规格验证
             if ($post['spec_type'] == 1) {
-                $empty_spec_lists = [];
-                GoodsLogic::normalizeUnitPost($post, $empty_spec_lists);
                 $result = $this->validate($post, 'app\admin\validate\GoodsOneSpec');
                 if ($result !== true) {
                     $this->_error($result);
@@ -207,7 +202,6 @@ class Goods extends AdminBase
                 unset($spec_lists['spec_id']);
                 unset($spec_lists['spec_value_ids']);
                 $spec_lists = form_to_linear($spec_lists);
-                GoodsLogic::normalizeUnitPost($post, $spec_lists);
 
                 //规格验证
                 if (empty($spec_lists)) {

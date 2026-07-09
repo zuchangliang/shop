@@ -21,7 +21,6 @@ namespace app\admin\logic;
 
 
 use app\common\logic\OrderLogLogic;
-use app\common\logic\OrderGoodsLogic;
 use app\common\model\NoticeSetting;
 use app\common\model\Order;
 use app\common\model\OrderGoods;
@@ -120,7 +119,7 @@ class FaceSheetOrderLogic
             $item['delivery_type'] = Order::getDeliveryType($item['delivery_type']);
             $item['address'] = AreaServer::getAddress([$item['province'], $item['city'], $item['district']], $item['address']);
 
-            $orderGoods = OrderGoods::field('id,goods_price,goods_num,unit_count,total_unit_num,goods_info')->where(['order_id'=>$item['id']])->select();
+            $orderGoods = OrderGoods::field('id,goods_price,goods_num,goods_info')->where(['order_id'=>$item['id']])->select();
             $orderGoodsData = [];
             foreach ($orderGoods as $og) {
                 $info = json_decode($og['goods_info'], true);
@@ -128,9 +127,6 @@ class FaceSheetOrderLogic
                     'id'          => $og['id'],
                     'goods_price' => $og['goods_price'],
                     'goods_num'   => $og['goods_num'],
-                    'unit_count'  => $og['unit_count'],
-                    'total_unit_num' => $og['total_unit_num'],
-                    'goods_num_desc' => OrderGoodsLogic::getGoodsNumDesc($og),
                     'goods_name'  => $info['goods_name'],
                     'spec_value_str' => $info['spec_value_str'],
                     'image' => $info['spec_image'] ? UrlServer::getFileUrl($info['spec_image']) : UrlServer::getFileUrl($info['image']),
@@ -205,7 +201,7 @@ class FaceSheetOrderLogic
             foreach ($order['order_goods'] as $item) {
 
                 $goodsInfo = json_decode($item['goods_info'], true);
-                $goodsName .= $goodsInfo['goods_name'].' ('.$goodsInfo['spec_value_str'].' '.OrderGoodsLogic::getGoodsNumDesc($item).')\n';
+                $goodsName .= $goodsInfo['goods_name'].' ('.$goodsInfo['spec_value_str'].$item['goods_num'].'件)\n';
                 $totalWeight = round($goodsInfo['weight']+$totalWeight,2);
             }
             // 打印电子面单

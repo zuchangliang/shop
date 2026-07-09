@@ -60,7 +60,7 @@ class Goods extends Model{
         return $this->hasMany('GoodsSpec', 'goods_id', 'id');
     }
     public function GoodsItem(){
-        return $this->hasMany('GoodsItem', 'goods_id', 'id')->field('id,goods_id,image,spec_value_ids,spec_value_str,market_price,price,unit_count,unit_price,unit_cost_price,stock');
+        return $this->hasMany('GoodsItem', 'goods_id', 'id')->field('id,goods_id,image,spec_value_ids,spec_value_str,market_price,price,stock');
     }
     public function GoodsSpecValue(){
 

@@ -88,7 +88,7 @@ class MenuDecorateLogic{
         foreach ($lists as &$item){
             $item['image'] = UrlServer::getFileUrl($item['image']);
             if($item['link_type'] == 1){
-                $content = Menu_::getMenuContent(2,$item['link_address']);
+                $content = Menu_::getMenuContent(1,$item['link_address']);
                 $item['link_address'] = $content['link'] ?? '';
             }
         }

@@ -145,10 +145,7 @@
                                 <tr style="background-color: #f3f5f9">
                                     <th>规格图片</th>
                                     <th>市场价(元)</th>
-                                    <th><span class="form-label-asterisk">*</span>内含件数</th>
-                                    <th><span class="form-label-asterisk">*</span>单价(元)</th>
                                     <th><span class="form-label-asterisk">*</span>价格(元)</th>
-                                    <th><span class="form-label-asterisk">*</span>单件成本(元)</th>
                                     <th><span class="form-label-asterisk">*</span>成本价(元)</th>
                                     <th><span class="form-label-asterisk">*</span>库存</th>
                                     <th>体积(m3)</th>
@@ -170,30 +167,15 @@
                                                autocomplete="off" switch-tab="1" verify-msg="请输入市场价"
                                                name="one_market_price"></td>
                                     <td><input type="number" class="layui-input"
-                                               lay-verify="one_spec_required|one_unit_count"
-                                               lay-verType="tips"
-                                               autocomplete="off" switch-tab="1" verify-msg="请输入内含件数"
-                                               name="one_unit_count" value="1"></td>
-                                    <td><input type="number" class="layui-input"
-                                               lay-verify="one_spec_required|one_unit_price"
-                                               lay-verType="tips"
-                                               autocomplete="off" switch-tab="1" verify-msg="请输入单价"
-                                               name="one_unit_price"></td>
-                                    <td><input type="number" class="layui-input"
                                                lay-verify="one_spec_required|one_price"
                                                lay-verType="tips"
                                                autocomplete="off" switch-tab="1" verify-msg="请输入价格"
-                                               name="one_price" readonly></td>
-                                    <td><input type="number" class="layui-input"
-                                               lay-verify="one_spec_required|one_unit_cost_price"
-                                               lay-verType="tips"
-                                               autocomplete="off" switch-tab="1" verify-msg="请输入单件成本价"
-                                               name="one_unit_cost_price"></td>
+                                               name="one_price"></td>
                                     <td><input type="number" class="layui-input"
                                                lay-verify="one_spec_required|one_cost_price"
                                                lay-verType="tips"
                                                autocomplete="off" switch-tab="1" verify-msg="请输入成本价"
-                                               name="one_cost_price" readonly></td>
+                                               name="one_cost_price"></td>
                                     <td><input type="number" class="layui-input" lay-verify="one_spec_required|one_stock"
                                                lay-verType="tips"
                                                autocomplete="off" switch-tab="1" verify-msg="请输入库存" name="one_stock">
@@ -217,9 +199,8 @@
                             <div class="batch-div"><span class="batch-spec-title">批量设置：</span>
                                 <div>
                                     <span class="batch-spec-content click-a" input-name="market_price">市场价</span>
-                                    <span class="batch-spec-content click-a" input-name="unit_count">内含件数</span>
-                                    <span class="batch-spec-content click-a" input-name="unit_price">单价</span>
-                                    <span class="batch-spec-content click-a" input-name="unit_cost_price">单件成本</span>
+                                    <span class="batch-spec-content click-a" input-name="price">价格</span>
+                                    <span class="batch-spec-content click-a" input-name="cost_price">成本价</span>
                                     <span class="batch-spec-content click-a" input-name="stock">库存</span>
                                     <span class="batch-spec-content click-a" input-name="volume">体积</span>
                                     <span class="batch-spec-content click-a" input-name="weight">重量</span>
@@ -444,10 +425,7 @@
         {spec_th}
         <th>规格图片</th>
         <th>市场价(元)</th>
-        <th><span class="form-label-asterisk">*</span>内含件数</th>
-        <th><span class="form-label-asterisk">*</span>单价(元)</th>
         <th><span class="form-label-asterisk">*</span>价格(元)</th>
-        <th><span class="form-label-asterisk">*</span>单件成本(元)</th>
         <th><span class="form-label-asterisk">*</span>成本价(元)</th>
         <th><span class="form-label-asterisk">*</span>库存</th>
         <th>体积(m3)</th>
@@ -465,16 +443,10 @@
     </td>
     <td><input type="number" class="layui-input" lay-verify="more_market_price" lay-verType="tips"
                autocomplete="off" switch-tab="1" verify-msg="请输入市场价" name="market_price[]"></td>
-    <td><input type="number" class="layui-input" lay-verify="more_spec_required|more_unit_count" lay-verType="tips"
-               autocomplete="off" switch-tab="1" verify-msg="请输入内含件数" name="unit_count[]" value="1"></td>
-    <td><input type="number" class="layui-input" lay-verify="more_spec_required|more_unit_price" lay-verType="tips"
-               autocomplete="off" switch-tab="1" verify-msg="请输入单价" name="unit_price[]"></td>
     <td><input type="number" class="layui-input" lay-verify="more_spec_required|more_price" lay-verType="tips"
-               autocomplete="off" switch-tab="1" verify-msg="请输入价格" name="price[]" readonly></td>
-    <td><input type="number" class="layui-input" lay-verify="more_spec_required|more_unit_cost_price" lay-verType="tips"
-               autocomplete="off" switch-tab="1" verify-msg="请输入单件成本价" name="unit_cost_price[]"></td>
+               autocomplete="off" switch-tab="1" verify-msg="请输入价格" name="price[]"></td>
     <td><input type="number" class="layui-input" lay-verify="more_spec_required|more_cost_price" lay-verType="tips"
-               autocomplete="off" switch-tab="1" verify-msg="请输入成本价" name="cost_price[]" readonly></td>
+               autocomplete="off" switch-tab="1" verify-msg="请输入成本价" name="cost_price[]"></td>
     <td><input type="number" class="layui-input" lay-verify="more_spec_required|more_stock" lay-verType="tips"
                autocomplete="off" switch-tab="1" verify-msg="请输入库存" name="stock[]"></td>
     <td><input type="number" class="layui-input" lay-verify="more_volume" lay-verType="tips"
@@ -895,78 +867,6 @@
             specValueLater();
         });
 
-        function parseUnitCount(value) {
-            var count = parseInt(value, 10);
-            return count > 0 ? count : 1;
-        }
-
-        function parseMoney(value) {
-            var money = parseFloat(value);
-            return isNaN(money) ? 0 : money;
-        }
-
-        function formatMoney(value) {
-            return (Math.round(value * 100) / 100).toFixed(2);
-        }
-
-        function calcUnitMoney(total, unit_count) {
-            unit_count = parseUnitCount(unit_count);
-            return formatMoney(parseMoney(total) / unit_count);
-        }
-
-        function calcOneUnitPrice() {
-            var unit_count = parseUnitCount($('input[name="one_unit_count"]').val());
-            var unit_price_input = $('input[name="one_unit_price"]');
-            var unit_cost_price_input = $('input[name="one_unit_cost_price"]');
-
-            $('input[name="one_unit_count"]').val(unit_count);
-            if (unit_price_input.val() !== '') {
-                $('input[name="one_price"]').val(formatMoney(parseMoney(unit_price_input.val()) * unit_count));
-            }
-            if (unit_cost_price_input.val() !== '') {
-                $('input[name="one_cost_price"]').val(formatMoney(parseMoney(unit_cost_price_input.val()) * unit_count));
-            }
-        }
-
-        function setRowSpecTableData($input) {
-            var key = $input.attr('name') + $input.parent().parent().attr('spec-value-temp-ids');
-            spec_table_data[key] = $input.val();
-        }
-
-        function calcMoreUnitPrice($tr) {
-            var unit_count_input = $tr.find('input[name="unit_count[]"]');
-            var unit_price_input = $tr.find('input[name="unit_price[]"]');
-            var price_input = $tr.find('input[name="price[]"]');
-            var unit_cost_price_input = $tr.find('input[name="unit_cost_price[]"]');
-            var cost_price_input = $tr.find('input[name="cost_price[]"]');
-            var unit_count = parseUnitCount(unit_count_input.val());
-
-            unit_count_input.val(unit_count);
-            setRowSpecTableData(unit_count_input);
-            if (unit_price_input.val() !== '') {
-                price_input.val(formatMoney(parseMoney(unit_price_input.val()) * unit_count));
-                setRowSpecTableData(price_input);
-            }
-            if (unit_cost_price_input.val() !== '') {
-                cost_price_input.val(formatMoney(parseMoney(unit_cost_price_input.val()) * unit_count));
-                setRowSpecTableData(cost_price_input);
-            }
-        }
-
-        function calcAllMoreUnitPrice() {
-            $('#more-spec-lists-table tbody tr').each(function () {
-                calcMoreUnitPrice($(this));
-            });
-        }
-
-        $(document).on('input', 'input[name="one_unit_count"],input[name="one_unit_price"],input[name="one_unit_cost_price"]', function () {
-            calcOneUnitPrice();
-        });
-
-        $(document).on('input', '#more-spec-lists-table input[name="unit_count[]"],#more-spec-lists-table input[name="unit_price[]"],#more-spec-lists-table input[name="unit_cost_price[]"]', function () {
-            calcMoreUnitPrice($(this).parent().parent());
-        });
-
 
         //批量填充规格图片
         like.imageUpload('.batch-spec-image',function(uri,element){
@@ -1002,9 +902,6 @@
                     var key = $(this).attr('name') + $(this).parent().parent().attr('spec-value-temp-ids');
                     spec_table_data[key] = $(this).val();
                 });
-                if (input_name == 'unit_count' || input_name == 'unit_price' || input_name == 'unit_cost_price') {
-                    calcAllMoreUnitPrice();
-                }
                 layer.close(index);
             });
         });
@@ -1200,7 +1097,6 @@
                     $(this).html('<input name="spec_image[]" type="hidden" value="' + spec_table_data["spec_image[]"+key] + '"><a class="goods-spec-img-del-x">x</a><img class="goods-spec-img" src="' + spec_table_data["spec_image[]"+key] + '">');
                 }
             });
-            calcAllMoreUnitPrice();
         }
 
         likeedit.set({
@@ -1304,30 +1200,6 @@
                     }
                 }
             },
-            one_unit_count: function (value, item) {
-                if ($('input[name="spec_type"]:checked').val() == 1) {
-                    if (value < 1 || value % 1 != 0) {
-                        switchTab($(item).attr('switch-tab'));
-                        return '内含件数必须为正整数';
-                    }
-                }
-            },
-            one_unit_price: function (value, item) {
-                if ($('input[name="spec_type"]:checked').val() == 1) {
-                    if (value && value < 0.01) {
-                        switchTab($(item).attr('switch-tab'));
-                        return '单价必须大于或等于0.01';
-                    }
-                }
-            },
-            one_unit_cost_price: function (value, item) {
-                if ($('input[name="spec_type"]:checked').val() == 1) {
-                    if (value && value < 0.01) {
-                        switchTab($(item).attr('switch-tab'));
-                        return '单件成本价必须大于或等于0.01';
-                    }
-                }
-            },
             // one_market_price: function (value, item) {
             //     if ($('input[name="spec_type"]:checked').val() == 1) {
             //         if (value && value < 0.01) {
@@ -1365,30 +1237,6 @@
                     if (value && value < 0.01) {
                         switchTab($(item).attr('switch-tab'));
                         return '成本价格必须大于或等于0.01';
-                    }
-                }
-            },
-            more_unit_count: function (value, item) {
-                if ($('input[name="spec_type"]:checked').val() == 2) {
-                    if (value < 1 || value % 1 != 0) {
-                        switchTab($(item).attr('switch-tab'));
-                        return '内含件数必须为正整数';
-                    }
-                }
-            },
-            more_unit_price:function (value, item) {
-                if ($('input[name="spec_type"]:checked').val() == 2) {
-                    if (value && value < 0.01) {
-                        switchTab($(item).attr('switch-tab'));
-                        return '单价必须大于或等于0.01';
-                    }
-                }
-            },
-            more_unit_cost_price:function (value, item) {
-                if ($('input[name="spec_type"]:checked').val() == 2) {
-                    if (value && value < 0.01) {
-                        switchTab($(item).attr('switch-tab'));
-                        return '单件成本价必须大于或等于0.01';
                     }
                 }
             },
@@ -1548,12 +1396,6 @@
             if(goods_info['item'][0]['image']){
                 $('.goods-one-spec-img-add').parent().html('<input name="one_spec_image" type="hidden" value="' + goods_info['item'][0]['image'] + '"><a class="goods-one-spec-img-del-x">x</a><img class="goods-spec-img" src="' + goods_info['item'][0]['abs_image'] + '">');
             }
-            var one_unit_count = goods_info['item'][0]['unit_count'] || 1;
-            var one_unit_price = goods_info['item'][0]['unit_price'] || calcUnitMoney(goods_info['item'][0]['price'], one_unit_count);
-            var one_unit_cost_price = goods_info['item'][0]['unit_cost_price'] || calcUnitMoney(goods_info['item'][0]['cost_price'], one_unit_count);
-            $('input[name="one_unit_count"]').val(one_unit_count);
-            $('input[name="one_unit_price"]').val(one_unit_price);
-            $('input[name="one_unit_cost_price"]').val(one_unit_cost_price);
             $('input[name="one_price"]').val(goods_info['item'][0]['price']);
             $('input[name="one_cost_price"]').val(goods_info['item'][0]['cost_price']);
             $('input[name="one_market_price"]').val(goods_info['item'][0]['market_price']);
@@ -1561,7 +1403,6 @@
             $('input[name="one_volume"]').val(goods_info['item'][0]['volume']);
             $('input[name="one_weight"]').val(goods_info['item'][0]['weight']);
             $('input[name="one_bar_code"]').val(goods_info['item'][0]['bar_code']);
-            calcOneUnitPrice();
         }
         if(goods_info['base']['spec_type'] == 2) {
             for(var i in goods_info['spec']){
@@ -1582,12 +1423,8 @@
                     var spec_value_str = $(this).find('input[name="spec_value_str[]"]').first().val();
                     if(spec_value_str == goods_info['item'][i]['spec_value_str']){
                         spec_value_temp_ids = $(this).attr('spec-value-temp-ids');
-                        var unit_count = goods_info['item'][i]['unit_count'] || 1;
                         spec_table_data["spec_image[]"+spec_value_temp_ids] = goods_info['item'][i]['abs_image'];
-                        spec_table_data["unit_count[]"+spec_value_temp_ids] = unit_count;
-                        spec_table_data["unit_price[]"+spec_value_temp_ids] = goods_info['item'][i]['unit_price'] || calcUnitMoney(goods_info['item'][i]['price'], unit_count);
                         spec_table_data["price[]"+spec_value_temp_ids] = goods_info['item'][i]['price'];
-                        spec_table_data["unit_cost_price[]"+spec_value_temp_ids] = goods_info['item'][i]['unit_cost_price'] || calcUnitMoney(goods_info['item'][i]['cost_price'], unit_count);
                         spec_table_data["cost_price[]"+spec_value_temp_ids] = goods_info['item'][i]['cost_price'];
                         spec_table_data["market_price[]"+spec_value_temp_ids] = goods_info['item'][i]['market_price'];
                         spec_table_data["stock[]"+spec_value_temp_ids] = goods_info['item'][i]['stock'];

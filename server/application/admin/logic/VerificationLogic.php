@@ -21,7 +21,6 @@ namespace app\admin\logic;
 
 
 use app\common\logic\OrderLogLogic;
-use app\common\logic\OrderGoodsLogic;
 use app\common\model\Order;
 use app\common\model\OrderLog;
 use app\common\model\UserLevel;
@@ -152,7 +151,6 @@ class VerificationLogic
                 $order_good_info = json_decode($order_goods['goods_info'], true);
                 $order_goods['goods_name'] = $order_good_info['goods_name'];
                 $order_goods['spec_value'] = $order_good_info['spec_value_str'];
-                $order_goods['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($order_goods);
                 $order_goods['image'] =  empty($order_good_info['spec_image']) ?
                     UrlServer::getFileUrl($order_good_info['image']) : UrlServer::getFileUrl($order_good_info['spec_image']);
             }
@@ -221,7 +219,7 @@ class VerificationLogic
             $goodsStr = '';
             foreach($item['order_goods'] as $subItem) {
                 $goodsInfo = json_decode($subItem['goods_info'], true);
-                $goodsStr.= '【'.$goodsInfo['goods_name'].' 规格:'.$goodsInfo['spec_value_str']. ' 数量:'.OrderGoodsLogic::getGoodsNumDesc($subItem). '】';
+                $goodsStr.= '【'.$goodsInfo['goods_name'].' 规格:'.$goodsInfo['spec_value_str']. ' 数量:'.$subItem['goods_num']. '】';
             }
             
             $item['verifier_name'] = '-';
@@ -324,7 +322,6 @@ class VerificationLogic
             $info = json_decode($order_goods['goods_info'], true);
             $order_goods['goods_name'] = $info['goods_name'];
             $order_goods['spec_value'] = $info['spec_value_str'];
-            $order_goods['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($order_goods);
             $order_goods['goods_image'] = empty($info['spec_image']) ?
                 UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
         }
@@ -354,7 +351,6 @@ class VerificationLogic
             $info = json_decode($order_goods['goods_info'], true);
             $order_goods['goods_name'] = $info['goods_name'];
             $order_goods['spec_value'] = $info['spec_value_str'];
-            $order_goods['goods_num_desc'] = OrderGoodsLogic::getGoodsNumDesc($order_goods);
             $order_goods['goods_image'] = empty($info['spec_image']) ?
                 UrlServer::getFileUrl($info['image']) : UrlServer::getFileUrl($info['spec_image']);
         }

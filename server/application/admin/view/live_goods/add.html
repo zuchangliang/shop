@@ -157,7 +157,7 @@
         <div class="layui-input-inline input_width" style="margin-top:-15px;">
             <input type="text" id="url" name="url"
                    class="layui-input" autocomplete="off" lay-verType="tips" lay-verify="required">
-            <div class="layui-form-mid " style="color: #999;">请确保小程序页面路径可被访问，例如：bundle_activity/pages/goods_details/goods_details?id=goods_id</div>
+            <div class="layui-form-mid " style="color: #999;">请确保小程序页面路径可被访问，例如：pages/goods_details/goods_details?id=goods_id</div>
         </div>
     </div>
 
@@ -206,7 +206,7 @@
                         $('#goods_name').val(item.name);
                         $('imput[name="use_price_type"]:eq(0)').attr('checked',true);
                         $('#price').val(item.min_price);
-                        $('#url').val('bundle_activity/pages/goods_details/goods_details?id='+item.id);
+                        $('#url').val('pages/goods_details/goods_details?id='+item.id);
 
                         // layer.load();
 
